@@ -1,0 +1,6 @@
+__pycache__
+backend/venv/
+/controladores/__pycache__/
+/venv/
+/env/
+backend/env/

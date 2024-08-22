@@ -2,7 +2,7 @@ import os
 from dotenv import load_dotenv
 from flask import Flask, send_from_directory
 from controladores.user_controlador import user_bp
-from controladores.news_controlador import news_bp
+from controladores.Productos_controlador import Productos_bp
 from controladores.img_controlador import imgs_bp
 from flask_cors import CORS
 from flask_pymongo import PyMongo
@@ -22,7 +22,7 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 app.config['Access-Control-Allow-Credentials'] = "true"
 
 app.register_blueprint(user_bp)
-app.register_blueprint(news_bp)
+app.register_blueprint(Productos_bp)
 app.register_blueprint(imgs_bp)
 
 @app.route('/images/<path:filename>') #tuve que agregar la ruta aca para que funcione, despues veo si la puedo cambiar con un bp

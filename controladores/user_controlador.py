@@ -5,7 +5,7 @@ from flask_cors import CORS
 import pymongo 
 
 db= pymongo.MongoClient("mongodb://localhost:27017")
-mydb=db["lastNews"]
+mydb=db["Tienda"]
 coleccion=mydb["users"]
 
 

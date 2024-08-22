@@ -1,6 +1,6 @@
 import os
 from flask import Blueprint, request, current_app, jsonify, send_from_directory
-from models.modelNews import NewsModel
+from models.modelProductos import ProductosModel
 from werkzeug.utils import secure_filename
 from models.modelImgs import ImagesModel
 

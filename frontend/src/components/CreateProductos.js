@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
 import { showSuccessMessage, showErrorMessage, closeMessage } from './messages';
 import { Helmet } from 'react-helmet';
-import '../styles/CreateNews.css';
+import '../styles/CreateProductos.css';
 
 function Create() {
   const [titulo, setTitulo] = useState('');
@@ -41,7 +41,7 @@ function Create() {
 
     setLoading(true); // Mostrar el mensaje de carga
 
-    fetch('http://localhost:5000/news/createNews', {
+    fetch('http://localhost:5000/Productos/createProductos', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -52,12 +52,12 @@ function Create() {
     .then(data => {
       console.log(data);
       setLoading(false); // Ocultar el mensaje de carga
-      showSuccessMessage('¡Noticia cargada con éxito!');
+      showSuccessMessage('Producto cargado con éxito!');
     })
     .catch(error => {
       console.error('Error:', error);
       setLoading(false); // Ocultar el mensaje de carga
-      showErrorMessage('Error al cargar la noticia: ' + error.message);
+      showErrorMessage('Error al cargar el producto: ' + error.message);
     });
   };
 

@@ -1,17 +1,17 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-function NewsDisplay({ news }) {
+function ProductosDisplay({ Productos }) {
     return (
         <div>
             <div className="row mx-auto d-flex justify-content-center align-items-center mt-4">
-                {news.map((item, index) => (
+                {Productos.map((item, index) => (
                     <React.Fragment key={item._id}>
                         <div className="col-md-4 mi-clase-css mt-4">
                             <div className="card h-100">
                                 <div className="card-body d-flex flex-column">
                                     <h5 className="card-title">{item.titulo}</h5>
-                                    <Link to={`/news/viewNew/${item._id}`}>Leer</Link>
+                                    <Link to={`/Productos/viewproduct/${item._id}`}>Leer</Link>
                                     <p className="card-text"><small className="text-body-secondary">{item.fecha}</small></p>
                                 </div>
                                 <div className="mt-auto">
@@ -28,4 +28,4 @@ function NewsDisplay({ news }) {
     );
 }
 
-export default NewsDisplay;
+export default ProductosDisplay;

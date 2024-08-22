@@ -2,27 +2,27 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 
-function NewsDetail() {
-  const [news, setNews] = useState({});
+function ProductosDetail() {
+  const [Productos, setProductos] = useState({});
   const { id } = useParams();
 
   useEffect(() => {
-    fetch(`http://localhost:5000/news/viewNews/${id}`) //aca tambien puerto 3000?
+    fetch(`http://localhost:5000/Productos/viewProductos/${id}`) //aca tambien puerto 3000?
       .then(response => response.json())
-      .then(data => setNews(data))
+      .then(data => setProductos(data))
       .catch(error => console.error('Error fetching data:', error));
   }, [id]);
 
   return (
     <div>
       <Helmet>
-        <title>{news.titulo}</title>
+        <title>{Productos.titulo}</title>
         {/* corregir el nombre */}
       </Helmet>
-      <h1>{news.titulo}</h1>
-      <div dangerouslySetInnerHTML={{ __html: news.noticia }} />
+      <h1>{Productos.titulo}</h1>
+      <div dangerouslySetInnerHTML={{ __html: Productos.noticia }} />
     </div>
   );
 }
 
-export default NewsDetail;
+export default ProductosDetail;

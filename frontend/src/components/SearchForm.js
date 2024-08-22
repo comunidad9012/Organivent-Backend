@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import NewsDisplay from './NewsDisplay'; 
+import ProductosDisplay from './ProductosDisplay'; 
 
 function SearchForm() {
     const [palabra, setQuery] = useState('');
-    const [news, setNews] = useState([]); 
+    const [Productos, setProductos] = useState([]); 
 
     const handleQueryChange = (event) => {
         setQuery(event.target.value);
@@ -13,7 +13,7 @@ function SearchForm() {
         event.preventDefault();
         const data = { palabra };
         try {
-            const response = await fetch('http://localhost:5000/news/find_new', {
+            const response = await fetch('http://localhost:5000/Productos/find_product', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -22,7 +22,7 @@ function SearchForm() {
             });
             if (response.ok) {
                 const responseData = await response.json();
-                setNews(responseData);
+                setProductos(responseData);
             } else {
                 console.error('Error al obtener los datos del backend');
             }
@@ -34,7 +34,7 @@ function SearchForm() {
     return (
         <div className="search-header">
             <form className="d-flex" onSubmit={handleSubmit} role="search">
-                <input className="search-header__input form-control me-2" type="search" id="palabra" value={palabra} onChange={handleQueryChange} required placeholder="Buscar noticia" aria-label="Search"/>
+                <input className="search-header__input form-control me-2" type="search" id="palabra" value={palabra} onChange={handleQueryChange} required placeholder="Buscar producto" aria-label="Search"/>
                 <button className="search-header__button btn btn-outline-success" type="submit">
                     <svg
                         fill="none"
@@ -50,7 +50,7 @@ function SearchForm() {
                     </svg>
                 </button>
             </form>
-            <NewsDisplay news={news} />
+            <ProductosDisplay Productos={Productos} />
             {/* Ver de resetear la variable o cambiar el componente */}
         </div>
     );

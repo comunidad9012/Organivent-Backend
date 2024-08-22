@@ -11,7 +11,7 @@ services:
       - "5000:5000"
     environment:
       - FLASK_ENV=development # Opcional: puede variar según tu configuración
-      - MONGO_URI=mongodb://mongo:27017/lastNews # Configuración de MongoDB
+      - MONGO_URI=mongodb://mongo:27017/Tienda # Configuración de MongoDB
     depends_on:
       - mongo
 

@@ -1,8 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from "react-router-dom";
-import News from './News';
-import NewsDetail from './NewsDetail';
-import Create from './CreateNews';
+import Productos from './Productos';
+import ProductosDetail from './ProductosDetail';
+import Create from './CreateProductos';
 import SearchForm from './SearchForm';
 import '../styles/index.css'; // Asegúrate de que esta ruta sea correcta
 
@@ -26,12 +26,12 @@ function Navbar() {
                 </button>
                 <div className="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-                        {location.pathname !== '/news/editor' && (
+                        {location.pathname !== '/Productos/editor' && (
                             <li className="nav-item">
-                                <Link className="nav-link active fancy" aria-current="page" to="/news/editor">
+                                <Link className="nav-link active fancy" aria-current="page" to="/Productos/editor">
                                     {/* Crear noticia */}
                                     <span className="top-key"></span>
-                                    <span className="text">Crear noticia</span>
+                                    <span className="text">Añadir producto</span>
                                     <span className="bottom-key-1"></span>
                                     <span className="bottom-key-2"></span>
                                 </Link>
@@ -51,9 +51,9 @@ function App() {
         <Router>
             <Navbar />
             <Routes>
-                <Route path='/' element={<News />} />
-                <Route path='/news/viewNew/:id' element={<NewsDetail />} />
-                <Route path='/news/editor' element={<Create />} />
+                <Route path='/' element={<Productos />} />
+                <Route path='/Productos/viewproduct/:id' element={<ProductosDetail />} />
+                <Route path='/Productos/editor' element={<Create />} />
             </Routes>
         </Router>
     );

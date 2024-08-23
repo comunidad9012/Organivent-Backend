@@ -9,8 +9,13 @@ class ProductosModel:
         self.mongo = PyMongo(app)
 
     def create_Productos(self, data):
-        if 'noticia' in data:
-            Productos_data = {'noticia': data['noticia'],'titulo':data['titulo'], 'fecha':data['fecha'],'miniatura':data['miniatura']}
+        if 'nombre_producto' in data:
+            Productos_data = {
+                'nombre_producto':data['nombre_producto'], 
+                'descripcion':data['descripcion'],
+                'precio_venta':data['precio_venta'],
+                #'stock':data['stock'],
+                'miniatura':data['miniatura']}
             self.mongo.db.Productos.insert_one(Productos_data)
             return {"contenido": "exitoso"}
         else:
@@ -32,8 +37,8 @@ class ProductosModel:
         regex = re.compile(f".*{re.escape(palabra)}.*", re.IGNORECASE)
         Productos = list(self.mongo.db.Productos.find({
             "$or": [
-                {"titulo": regex},
-                {"noticia": regex}
+                {"nombre_producto": regex}, #aca seguro cambia tambien
+                {"noticia": regex} #serà descripcion aca? ESTOS SON LOS QUE BUSCAN NUNCA LO PROBE (re)
             ]
         }).sort('_id', -1))
         

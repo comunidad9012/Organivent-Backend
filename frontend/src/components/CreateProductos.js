@@ -5,8 +5,9 @@ import { Helmet } from 'react-helmet';
 import '../styles/CreateProductos.css';
 
 function Create() {
-  const [titulo, setTitulo] = useState('');
-  const [noticia, setContent] = useState('');
+  const [nombre_producto, setnombre_producto] = useState(''); //no larga error pero no lo muestra
+  const [descripcion, setContent] = useState('');
+  const [precio_venta, setprecio_venta] = useState('');
   const editorRef = useRef(null);
   const [miniatura, setMiniatura] = useState('');
   const [imagenes, setImagenes] = useState([]);
@@ -23,8 +24,12 @@ function Create() {
     setContent(content);
   };
 
-  const handleTituloChange = (event) => {
-    setTitulo(event.target.value);
+  const handlenombre_productoChange = (event) => {
+    setnombre_producto(event.target.value);
+  };
+
+  const handleprecio_ventaChange = (event) => { //aca
+    setprecio_venta(event.target.value);
   };
 
   const handleSubmit = (event) => {
@@ -33,8 +38,9 @@ function Create() {
     const fechaAct = new Date().toLocaleDateString();
 
     const data = {
-      titulo,
-      noticia,
+      nombre_producto,
+      descripcion,
+      precio_venta, //aca
       fecha: fechaAct,
       miniatura
     };
@@ -73,73 +79,79 @@ function Create() {
   return (
     <div>
       <Helmet>
-        <title>Crear noticia</title>
+        <title>Añadir producto</title>
       </Helmet>
       <form onSubmit={handleSubmit}>
         <div className="container text-center col-md-8 mt-4 mb-4">
-          <label htmlFor="titulo"><h5>Titulo</h5></label>
-          <input type="text" className="form-control" id="titulo" value={titulo} onChange={handleTituloChange} required />
-          <h5 className='mt-2'>Cuerpo</h5>
+          <label htmlFor="nombre_producto"><h5>Nombre del producto</h5></label>
+          <input type="text" className="form-control" id="nombre_producto" value={nombre_producto} onChange={handlenombre_productoChange} required />
+          <br></br>
+          <h5 className='mt-2'>Descripción</h5>
         </div>
-        <Editor
-          apiKey='1hyldt9u4byda8tjkhrxwy3zqocdzt2fujo24fy4spgi9wmc'
-          onInit={(evt, editor) => editorRef.current = editor}
-          init={{
-            height: 500,
-            menubar: true,
-            language: 'es',
-            plugins: [
-              'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
-              'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
-              'insertdatetime', 'media', 'table', 'code', 'help', 'wordcount'
-            ],
-            toolbar: 'undo redo | formatselect | bold italic forecolor | ' +
-              'alignleft aligncenter alignright alignjustify | ' +
-              'bullist numlist outdent indent | removeformat | image | help',
-            content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
-            images_upload_url: 'http://localhost:5000/imgs/upload',
-            automatic_uploads: true,
-            file_picker_types: 'image',
-            file_picker_callback: (cb, value, meta) => {
-              const input = document.createElement('input');
-              input.setAttribute('type', 'file');
-              input.setAttribute('accept', 'image/*');
+        <div className="container text-center col-md-8 mt-4 mb-4">
+          <Editor
+            apiKey='1hyldt9u4byda8tjkhrxwy3zqocdzt2fujo24fy4spgi9wmc'
+            onInit={(evt, editor) => editorRef.current = editor}
+            init={{
+              height: 500,
+              menubar: true,
+              language: 'es',
+              plugins: [
+                'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+                'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                'insertdatetime', 'media', 'table', 'code', 'help', 'wordcount'
+              ],
+              toolbar: 'undo redo | formatselect | bold italic forecolor | ' +
+                'alignleft aligncenter alignright alignjustify | ' +
+                'bullist numlist outdent indent | removeformat | image | help',
+              content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
+              images_upload_url: 'http://localhost:5000/imgs/upload',
+              automatic_uploads: true,
+              file_picker_types: 'image',
+              file_picker_callback: (cb, value, meta) => {
+                const input = document.createElement('input');
+                input.setAttribute('type', 'file');
+                input.setAttribute('accept', 'image/*');
 
-              input.onchange = function() {
-                const file = this.files[0];
+                input.onchange = function() {
+                  const file = this.files[0];
 
-                const formData = new FormData();
-                formData.append('file', file);
+                  const formData = new FormData();
+                  formData.append('file', file);
 
-                fetch('http://localhost:5000/imgs/upload', {
-                  method: 'POST',
-                  body: formData
-                })
-                .then(response => response.json())
-                .then(data => {
-                  if (data.location) {
-                    cb(data.location, { title: file.name });
-                  } else {
-                    console.error('Error: la respuesta no contiene la URL de la imagen.');
-                    showErrorMessage('Error: la respuesta no contiene la URL de la imagen.');
-                  }
-                })
-                .catch(error => {
-                  console.error('Error:', error);
-                  showErrorMessage('Error al subir la imagen: ' + error.message);
-                });
-              };
+                  fetch('http://localhost:5000/imgs/upload', {
+                    method: 'POST',
+                    body: formData
+                  })
+                  .then(response => response.json())
+                  .then(data => {
+                    if (data.location) {
+                      cb(data.location, { title: file.name });
+                    } else {
+                      console.error('Error: la respuesta no contiene la URL de la imagen.');
+                      showErrorMessage('Error: la respuesta no contiene la URL de la imagen.');
+                    }
+                  })
+                  .catch(error => {
+                    console.error('Error:', error);
+                    showErrorMessage('Error al subir la imagen: ' + error.message);
+                  });
+                };
 
-              input.click();
-            }
-          }}
-          onEditorChange={handleEditorChange}
-        />
+                input.click();
+              }
+            }}
+            onEditorChange={handleEditorChange}
+          />
+        <br></br>
+        <label htmlFor="precio_venta"><h5>Precio</h5></label>
+          <input type="number" className="form-control" id="precio_venta" value={precio_venta} onChange={handleprecio_ventaChange} required />
+        </div>
         <div className="container text-center mt-2">
           {/* Ocultar el botón mientras loading es true */}
           {!loading && (
             <button type="submit" className="btn btn-success" onClick={Click}>
-              Cargar Noticia
+              Cargar producto
             </button>
           )}
         </div>

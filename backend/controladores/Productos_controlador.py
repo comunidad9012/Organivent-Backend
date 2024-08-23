@@ -1,3 +1,7 @@
+# Blueprint: Permite crear módulos separados para diferentes partes de la aplicación.
+# request: Para acceder a los datos enviados en las solicitudes HTTP.
+# current_app: Hace referencia a la aplicación Flask activa.
+
 from flask import Blueprint, request, current_app
 from models.modelProductos import ProductosModel
 
@@ -5,10 +9,10 @@ Productos_bp = Blueprint('Productos', __name__, url_prefix='/Productos')
 
 @Productos_bp.post("/createProductos")
 def create_Productos():
-    data = request.json
-    Productos_model = ProductosModel(current_app)
-    response = Productos_model.create_Productos(data)
-    return response
+    data = request.json  #Obtiene los datos enviados en la solicitud como un diccionario JSON.
+    Productos_model = ProductosModel(current_app)  #Instancia el modelo de productos, conectándolo con la aplicación Flask activa.
+    response = Productos_model.create_Productos(data) #Llama al método del modelo para crear el producto con los datos proporcionados.
+    return response #Devuelve la respuesta al cliente.
 
 # arreglar que si o si tiene que tener contenido la noticia para crearla
 

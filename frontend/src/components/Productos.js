@@ -29,7 +29,7 @@ function Productos() {
                   <img src={item.miniatura || "../../imagenes/foto.png"} className="card-img-top" alt="..." />
                   <div className="card-body d-flex flex-column">
                     <h5 className="card-title">{item.nombre_producto}</h5>
-                    <p className="card-text">{item.descripcion}</p>
+                    <p className="card-text">${item.precio_venta}</p>
                     <p className="card-text">
                       {/* <small className="text-body-secondary">{item.fecha}</small> */}
                     </p>

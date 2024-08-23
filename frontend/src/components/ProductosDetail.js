@@ -7,7 +7,7 @@ function ProductosDetail() {
   const { id } = useParams();
 
   useEffect(() => {
-    fetch(`http://localhost:5000/Productos/viewProductos/${id}`) //aca tambien puerto 3000?
+    fetch(`http://localhost:5000/Productos/viewProductos/${id}`)
       .then(response => response.json())
       .then(data => setProductos(data))
       .catch(error => console.error('Error fetching data:', error));
@@ -16,11 +16,11 @@ function ProductosDetail() {
   return (
     <div>
       <Helmet>
-        <title>{Productos.titulo}</title>
+        <title>{Productos.nombre_producto}</title>
         {/* corregir el nombre */}
       </Helmet>
-      <h1>{Productos.titulo}</h1>
-      <div dangerouslySetInnerHTML={{ __html: Productos.noticia }} />
+      <h1>{Productos.nombre_producto}</h1>
+      <div dangerouslySetInnerHTML={{ __html: Productos.nombre_producto }} />
     </div>
   );
 }

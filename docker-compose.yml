@@ -10,10 +10,11 @@ services:
     ports:
       - "5000:5000"
     environment:
-      - FLASK_ENV=development # Opcional: puede variar según tu configuración
-      - MONGO_URI=mongodb://mongo:27017/Tienda # Configuración de MongoDB
+      - FLASK_ENV=development
+      - MONGO_URI=mongodb://mongo:27017/Tienda
     depends_on:
       - mongo
+      - minio
 
   frontend:
     build:
@@ -33,5 +34,18 @@ services:
     volumes:
       - mongo-data:/data/db
 
+  minio:
+    image: minio/minio:latest
+    command: server /data
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      - MINIO_ROOT_USER=${MINIO_ROOT_USER}
+      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
+    volumes:
+      - minio-data:/data
+
 volumes:
   mongo-data:
+  minio-data:

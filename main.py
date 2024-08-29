@@ -24,6 +24,7 @@ app.register_blueprint(Client_bp)
 app.register_blueprint(Productos_bp)
 app.register_blueprint(imgs_bp)
 app.register_blueprint(Categoria_bp)
+#app.register_blueprint(auth_bp)
 
 @app.route('/images/<path:filename>')
 def serve_image(filename):

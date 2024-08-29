@@ -47,3 +47,9 @@ class ProductosModel:
         
         response = json_util.dumps(Productos)
         return Response(response, mimetype="application/json")
+
+    # def get_productos_by_categoria(self, nombre_categoria):
+    #     productos = list(self.productos.find({"categoria": nombre_categoria}))
+    #     for producto in productos:
+    #         producto['_id'] = str(producto['_id'])
+    #     return productos

@@ -1,3 +1,4 @@
+#IMPORTANTE: este archivo deberia decir en vez de http://backend:5000 decir ${API_URL} pero por la comillas no puedo, de todos modos este componente no se utiliza
 import os
 from flask import Blueprint, request, current_app, jsonify, send_from_directory
 from models.modelProductos import ProductosModel
@@ -12,7 +13,7 @@ def upload_file():
         file = request.files['file']
         filename = secure_filename(file.filename)
         file.save(f"{current_app.config['UPLOAD_FOLDER']}/{filename}") #cuando tenga mas tiempo, buscar una forma de que se suban solo las imagenes incluidas dentro de la noticia 
-        file_url = f'http://localhost:5000/images/{filename}'
+        file_url = f'http://backend:5000/images/{filename}'
         img_model=ImagesModel(current_app)
         img_model.save_image_db(filename,file_url)
         return jsonify({'location': file_url})

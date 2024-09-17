@@ -11,11 +11,14 @@ RUN pip install -r requirements.txt
 # Copia el resto de los archivos del proyecto
 COPY . .
 
-# Asegura que wait-for-mongo.sh tenga permisos de ejecución
-RUN chmod +x ./wait-for-mongo.sh
-
 # Instala netcat para que el script wait-for-mongo.sh funcione
 RUN apt-get update && apt-get install -y netcat-openbsd
+
+# Instala ping
+RUN apt-get install -y iputils-ping
+
+# Asegura que wait-for-mongo.sh tenga permisos de ejecución
+RUN chmod +x ./wait-for-mongo.sh
 
 # Expone el puerto 5000
 EXPOSE 5000

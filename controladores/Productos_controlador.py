@@ -9,6 +9,18 @@ Productos_bp = Blueprint('Productos', __name__, url_prefix='/Productos')
 
 @Productos_bp.post("/createProductos")
 def create_Productos():
+    """
+    Create a new product in the database.
+
+    This function handles POST requests to create a new product. It receives the product data
+    as JSON in the request body, creates a new product using the ProductosModel, and returns
+    the response from the model.
+
+    Returns:
+        dict: A dictionary containing the response from the ProductosModel's create_Productos method.
+              This typically includes information about the success or failure of the operation
+              and potentially the details of the created product.
+    """
     data = request.json  #Obtiene los datos enviados en la solicitud como un diccionario JSON.
     Productos_model = ProductosModel(current_app)  #Instancia el modelo de productos, conectándolo con la aplicación Flask activa.
     response = Productos_model.create_Productos(data) #Llama al método del modelo para crear el producto con los datos proporcionados.

@@ -20,6 +20,18 @@ class ProductosModel:
             return {"contenido": "exitoso"}
         else:
             return {"contenido": "no funciona"}
+
+
+
+    def delete_product_by_id(self, product_id):
+        try:
+            result = self.mongo.db.Productos.delete_one({"_id": ObjectId(product_id)})  # Convierte a ObjectId
+            return result.deleted_count > 0
+        except Exception as e:
+            print(f"Error al eliminar el producto: {e}")
+            return False
+
+
         
     def show_Productos(self):
         Productos=list(self.mongo.db.Productos.find().sort('_id', -1))
@@ -38,7 +50,7 @@ class ProductosModel:
         Productos = list(self.mongo.db.Productos.find({
             "$or": [
                 {"nombre_producto": regex}, #aca seguro cambia tambien
-                {"noticia": regex} #serà descripcion aca? ESTOS SON LOS QUE BUSCAN NUNCA LO PROBE (re)
+                {"noticia": regex} #serà descripcion aca? ESTOS SON LOS QUE BUSCAN NUNCA LO PROBE (importacion re)
             ]
         }).sort('_id', -1))
         

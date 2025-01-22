@@ -2,7 +2,7 @@
 # request: Para acceder a los datos enviados en las solicitudes HTTP.
 # current_app: Hace referencia a la aplicación Flask activa.
 
-from flask import Blueprint, request, current_app
+from flask import Blueprint, request, current_app, jsonify
 from models.modelProductos import ProductosModel
 
 Productos_bp = Blueprint('Productos', __name__, url_prefix='/Productos')
@@ -24,9 +24,19 @@ def create_Productos():
     data = request.json  #Obtiene los datos enviados en la solicitud como un diccionario JSON.
     Productos_model = ProductosModel(current_app)  #Instancia el modelo de productos, conectándolo con la aplicación Flask activa.
     response = Productos_model.create_Productos(data) #Llama al método del modelo para crear el producto con los datos proporcionados.
-    return response #Devuelve la respuesta al cliente.
+    return response #Devuelve la respuesta al cliente (front en react).
 
-# arreglar que si o si tiene que tener contenido la noticia para crearla
+# arreglar que si o si tiene que tener contenido el producto para crearlo.
+
+@Productos_bp.delete("/deleteProductos/<id>")
+def delete_product(id):
+    Productos_model = ProductosModel(current_app)
+    success = Productos_model.delete_product_by_id(id)
+    if success:
+        return jsonify({"message": "Producto eliminado con éxito"}), 200
+    else:
+        return jsonify({"error": "No se encontró el producto"}), 404
+
 
 @Productos_bp.get("/showProductos") #CAMBIE LA PETICION POST POR GET, YA QUE CON ESTO QUEREMOS TRAER LOS DATOS EN EL FRONT
 def show_Productos():

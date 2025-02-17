@@ -58,8 +58,25 @@ def find_product():
     response = Productos_model.find_Productos(palabra=palabra)
     return response
 
-#     @Productos_bp.get("/showProductosPorCategoria/<nombre_categoria>")
+# @Productos_bp.get("/showProductosPorCategoria/<nombre_categoria>")
 # def get_productos_por_categoria(nombre_categoria):
 #     productos_model = Productos(current_app.mongo.db)
 #     response = productos_model.get_productos_by_categoria(nombre_categoria)
 #     return response
+
+@Productos_bp.put("/updateProductos/<id>")
+def update_product(id):
+    """
+    Update an existing product in the database.
+
+    This function handles PUT requests to update a product. It receives the updated product data
+    as JSON in the request body, updates the corresponding product in the database, and returns
+    a response indicating success or failure.
+
+    Returns:
+        dict: A dictionary containing the response from the ProductosModel's update_product method.
+    """
+    data = request.json  # Obtiene los datos enviados en la solicitud como JSON.
+    Productos_model = ProductosModel(current_app)  # Instancia el modelo de productos.
+    response = Productos_model.update_product(id, data)  # Llama al método del modelo.
+    return response  # Devuelve la respuesta.

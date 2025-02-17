@@ -65,3 +65,30 @@ class ProductosModel:
     #     for producto in productos:
     #         producto['_id'] = str(producto['_id'])
     #     return productos
+
+    def update_product(self, product_id, data):
+        try:
+            update_fields = {}
+
+            if 'nombre_producto' in data:
+                update_fields['nombre_producto'] = data['nombre_producto']
+            if 'descripcion' in data:
+                update_fields['descripcion'] = data['descripcion']
+            if 'precio_venta' in data:
+                update_fields['precio_venta'] = data['precio_venta']
+            if 'miniatura' in data:
+                update_fields['miniatura'] = data['miniatura']
+
+            result = self.mongo.db.Productos.update_one(
+                {"_id": ObjectId(product_id)},
+                {"$set": update_fields}
+            )
+
+            if result.matched_count > 0:
+                return {"message": "Producto actualizado con éxito"}, 200
+            else:
+                return {"error": "No se encontró el producto"}, 404
+
+        except Exception as e:
+            print(f"Error al actualizar el producto: {e}")
+            return {"error": "Error interno del servidor"}, 500

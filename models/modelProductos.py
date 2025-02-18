@@ -15,7 +15,8 @@ class ProductosModel:
                 'descripcion':data['descripcion'],
                 'precio_venta':data['precio_venta'],
                 #'stock':data['stock'],
-                'miniatura':data['miniatura']}
+                #'miniatura':data['miniatura']
+                }
             self.mongo.db.Productos.insert_one(Productos_data)
             return {"contenido": "exitoso"}
         else:

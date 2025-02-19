@@ -64,7 +64,7 @@ def find_product():
 #     response = productos_model.get_productos_by_categoria(nombre_categoria)
 #     return response
 
-@Productos_bp.put("/updateProductos/<id>")
+@Productos_bp.put("/update/<id>")
 def update_product(id):
     """
     Update an existing product in the database.

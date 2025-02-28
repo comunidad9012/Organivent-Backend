@@ -58,11 +58,11 @@ def find_product():
     response = Productos_model.find_Productos(palabra=palabra)
     return response
 
-# @Productos_bp.get("/showProductosPorCategoria/<nombre_categoria>")
-# def get_productos_por_categoria(nombre_categoria):
-#     productos_model = Productos(current_app.mongo.db)
-#     response = productos_model.get_productos_by_categoria(nombre_categoria)
-#     return response
+@Productos_bp.get("/showProductosPorCategoria/<nombre_categoria>")
+def get_productos_por_categoria(nombre_categoria):
+    productos_model = Productos(current_app) #saque current_app.mongo.db
+    response = productos_model.get_productos_by_categoria(nombre_categoria)
+    return response
 
 @Productos_bp.put("/update/<id>")
 def update_product(id):

@@ -61,8 +61,8 @@ class ProductosModel:
         response = json_util.dumps(Productos)
         return Response(response, mimetype="application/json")
 
-    def get_productos_by_categoria(self, nombre_categoria):
-        productos = list(self.mongo.db.Productos.find({"categoria": nombre_categoria})) #-------------
+    def get_productos_by_categoria(self, id_categoria):
+        productos = list(self.mongo.db.Productos.find({"categoria": id_categoria})) #-------------aca va el id de la categoria no el nombre
         for producto in productos:
             producto['_id'] = str(producto['_id'])
         response=json_util.dumps(productos)

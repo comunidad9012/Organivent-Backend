@@ -58,12 +58,12 @@ def find_product():
     response = Productos_model.find_Productos(palabra=palabra)
     return response
 
-@Productos_bp.get("/showProductosPorCategoria/<nombre_categoria>")
-def get_productos_por_categoria(nombre_categoria):
-    nombre_categoria = nombre_categoria.replace("%20", " ")  # Decodifica espacios si es necesario
-    print("Categoría recibida:", nombre_categoria)  # Debug en consola
+@Productos_bp.get("/showProductosPorCategoria/<id_categoria>")
+def get_productos_por_categoria(id_categoria):
+    id_categoria = id_categoria.replace("%20", " ")  # Decodifica espacios si es necesario
+    print("Categoría recibida:", id_categoria)  # Debug en consola
     Productos_model = ProductosModel(current_app)#saque current_app.mongo.db  //posible problemita con Productos
-    response = Productos_model.get_productos_by_categoria(nombre_categoria) #----------
+    response = Productos_model.get_productos_by_categoria(id_categoria) #----------
     return response
 
 @Productos_bp.put("/update/<id>")

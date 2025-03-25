@@ -1,36 +1,38 @@
 from flask_pymongo import PyMongo
 from flask import Response
-from bson import json_util
-from bson.objectid import ObjectId
-import re
+from bson import json_util, ObjectId
+from werkzeug.security import generate_password_hash, check_password_hash
 
 class ClientModel:
     def __init__(self, app):
         self.mongo = PyMongo(app)
 
     def create_client(self, data):
-        # Verificar si el DNI_cliente o email ya existe
         existing_client = self.mongo.db.Clientes.find_one({
             "$or": [
                 {"DNI_cliente": data['DNI_cliente']},
                 {"email": data['email']}
             ]
         })
-
+        
         if existing_client:
             return {"contenido": "Este DNI o E-mail ya está registrado"}, 400
         
+        hashed_password = generate_password_hash(data['Contraseña'])
         client_data = {
             'nombre': data['nombre'],
             'DNI_cliente': data['DNI_cliente'],
             'nombre_usuario': data['nombre_usuario'],
-            'Contraseña': data['Contraseña'],
-            'email': data['email']
+            'Contraseña': hashed_password,
+            'email': data['email'],
+            'admin': data.get('admin', False)
         }
+        
         self.mongo.db.Clientes.insert_one(client_data)
         return {"contenido": "Usuario registrado con éxito"}, 201
-
-# Esto lo podemos usar para que los admins vean los clientes que tienen y sacar datos de ellos
+    
+    def get_usuario_by_username(self, username):
+        return self.mongo.db.Clientes.find_one({"nombre_usuario": username})
 
     def show_clients(self):
         clients = list(self.mongo.db.Clientes.find().sort('_id', -1))

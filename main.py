@@ -15,6 +15,7 @@ app = Flask(__name__, static_folder='../images', static_url_path='/images')
 CORS(app)
 
 app.config['MONGO_URI'] = os.getenv('MONGOURL')
+app.secret_key = os.getenv("SECRET_KEY")
 mongo = PyMongo(app)  # Esto debería configurar mongo correctamente
 
 app.config['UPLOAD_FOLDER'] = os.path.join(os.getcwd(), '../images')

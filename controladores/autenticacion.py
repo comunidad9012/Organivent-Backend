@@ -23,10 +23,10 @@ def login():
     if usuario and str(usuario["nombre_usuario"]) == username and check_password_hash(usuario['Contraseña'], password):
         print("entro al if, el nombre_usuario y el hash concuerda")
         session['user_id'] = str(usuario['_id'])
-        session['is_admin'] = usuario.get('admin', False) 
+        session['rol'] = usuario.get('rol', "user") 
         user = {
             "nombre_usuario": usuario["nombre_usuario"],
-            "admin": session['is_admin']
+            "rol": session['rol']
         }
         return jsonify( user), 200
     else:

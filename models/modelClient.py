@@ -25,7 +25,7 @@ class ClientModel:
             'nombre_usuario': data['nombre_usuario'],
             'Contraseña': hashed_password,
             'email': data['email'],
-            'admin': data.get('admin', False)
+            'rol': data.get('rol', 'user')
         }
         
         self.mongo.db.Clientes.insert_one(client_data)

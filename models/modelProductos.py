@@ -14,6 +14,7 @@ class ProductosModel:
                 'nombre_producto':data['nombre_producto'], 
                 'descripcion':data['descripcion'],
                 'precio_venta':data['precio_venta'],
+                'colores':data['colores']
                 #'stock':data['stock'],
                 #'miniatura':data['miniatura']
                 }
@@ -43,6 +44,7 @@ class ProductosModel:
 
     def specific_product(self,id):
         Productos=self.mongo.db.Productos.find_one({'_id': ObjectId(id), })
+        Productos['_id'] = str(Productos['_id'])
         response=json_util.dumps(Productos)
         return Response(response, mimetype="application/json")
     
@@ -78,8 +80,10 @@ class ProductosModel:
                 update_fields['descripcion'] = data['descripcion']
             if 'precio_venta' in data:
                 update_fields['precio_venta'] = data['precio_venta']
-            if 'miniatura' in data:
-                update_fields['miniatura'] = data['miniatura']
+            if 'colores' in data:
+                update_fields['colores'] = data['colores']
+            # if 'miniatura' in data:
+            #     update_fields['miniatura'] = data['miniatura']
 
             result = self.mongo.db.Productos.update_one(
                 {"_id": ObjectId(product_id)},

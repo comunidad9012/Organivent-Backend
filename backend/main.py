@@ -13,7 +13,7 @@ app = Flask(__name__, static_folder='../images', static_url_path='/images') #ree
 cors_app = CORS(app)
 
 
-app.config['MONGO_URI']= os.getenv('MONGOURL')
+app.config['MONGO_URI']= os.getenv('MONGO_URI')
 mongo = PyMongo(app)
 
 app.config['UPLOAD_FOLDER'] = os.path.join(os.getcwd(), '../images')

@@ -1,0 +1,11 @@
+﻿{
+  "corsRules": [
+    {
+      "AllowedOrigins": ["*"],
+      "AllowedMethods": ["GET", "POST", "PUT", "DELETE"],
+      "AllowedHeaders": ["*"],
+      "ExposeHeaders": ["ETag"],
+      "MaxAgeSeconds": 3000
+    }
+  ]
+}

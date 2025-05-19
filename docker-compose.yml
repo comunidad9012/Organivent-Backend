@@ -5,13 +5,13 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
+    env_file: ./backend/.env  # Todas las variables acá
     volumes:
       - ./backend:/app
     ports:
       - "5000:5000"
     environment:
-      - FLASK_ENV=development
-      - MONGO_URI=mongodb://mongo:27017/Tienda
+      - FLASK_ENV=development  # Solo esta variable adicional
     depends_on:
       - mongo
       - minio
@@ -36,16 +36,29 @@ services:
 
   minio:
     image: minio/minio:latest
-    command: server /data
     ports:
-      - "9000:9000"
-      - "9001:9001"
-    environment:
-      - MINIO_ROOT_USER=${MINIO_ROOT_USER}
-      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
+      - "9000:9000" #API
+      - "9001:9001" #Interfaz grafica
+    command: server /data --console-address ":9001"
+    env_file: ./backend/.env
     volumes:
       - minio-data:/data
+      - ./scripts:/scripts
+    healthcheck: # marca el contenedor como sano si responde, para que otros servicios esperean antes de conectarse
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+
+  minio-setup:
+    image: minio/mc
+    depends_on: #asegura que el minio se inicie antes que este contenedor
+      - minio
+    volumes:
+      - ./scripts/init-minio-dev.sh:/init-minio-dev.sh
+    entrypoint: /init-minio-dev.sh
+    env_file: ./backend/.env
 
 volumes:
+  minio-data: #almacena los archivos reales del bucket
   mongo-data:
-  minio-data:

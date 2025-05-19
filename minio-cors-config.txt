@@ -1,0 +1,1 @@
+﻿api allow_cors="*"

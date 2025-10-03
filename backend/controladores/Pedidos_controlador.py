@@ -4,6 +4,7 @@ from models.modelClient import ClientModel
 from controladores.autenticacion import token_required
 from bson import json_util
 from controladores.Notificaciones_email_controlador import enviar_confirmacion_pedido, enviar_actualizacion_estado
+from models.modelStock import StockModel
 
 
 Pedidos_bp = Blueprint('Pedidos', __name__, url_prefix='/Pedidos')
@@ -113,3 +114,41 @@ def update_state(token_data, id):
         return jsonify({"mensaje": "Estado actualizado correctamente"}), 200
     except ValueError as e:
         return jsonify({"error": str(e)}), 400
+        
+
+@Pedidos_bp.put("/cancelPedido/<id>")
+@token_required
+def cancel_pedido(token_data, id):
+    try:
+        pedidos_model = PedidosModel(current_app)
+        pedido = pedidos_model.get_pedido_by_id_raw(id)
+
+        if not pedido:
+            return jsonify({"error": "Pedido no encontrado"}), 404
+
+        # Validar que el usuario que cancela es el dueño
+        if str(pedido.get("usuarioId")) != token_data.get("id"):
+            return jsonify({"error": "No tienes permiso para cancelar este pedido"}), 403
+
+        # Solo permitir cancelar pedidos que no estén entregados
+        if pedido["estado"] == "Entregado":
+            return jsonify({"error": "No se puede cancelar un pedido ya entregado"}), 400
+
+        # Actualizar estado a "Cancelado"
+        pedidos_model.update_state(id, "Cancelado")
+
+        # Restaurar stock de los productos
+        stock_model = StockModel(current_app)
+        for prod in pedido["productos"]:
+            variante_id = prod.get("variante_id")
+            cantidad = prod.get("cantidad", 1)
+            if variante_id:
+                stock_model.increase_stock(variante_id, cantidad)
+
+        return jsonify({"mensaje": "Pedido cancelado correctamente"}), 200
+
+    except Exception as e:
+        print("Error al cancelar pedido:", e)
+        return jsonify({"error": str(e)}), 500
+
+

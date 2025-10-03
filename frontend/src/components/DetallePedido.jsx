@@ -1,79 +1,90 @@
 // agregar por ahi
 
-{/* <DeleteItem
+{
+  /* <DeleteItem
   item={pedido}
   itemName={`Pedido #${pedido.numero}`}
   resource="Pedidos"
   setItems={setPedidos}
   getId={(p) => p._id}
-/> */}
+/> */
+}
 
-
-import { useParams } from 'react-router-dom'
-import { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
-import axios from 'axios'
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import axios from "axios";
 import {
-  Clock, Mail, User, Truck, ShoppingCart, ImageIcon, ArrowRight
-} from 'lucide-react'
+  Clock,
+  Mail,
+  User,
+  Truck,
+  ShoppingCart,
+  ImageIcon,
+  ArrowRight,
+} from "lucide-react";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from "@/components/ui/select";
 
-import EstadoPedido from '../models/Estado_Pedido/EstadoPedido'
-import { EstadosPedido } from '../models/Estado_Pedido/enums'
-import { toast } from "sonner"
-import PriceWhitDiscountOrNot from '../utilities/PriceWhitDiscountOrNot'
-import FormatoPrecio from '../utilities/FormatoPrecio'
+import EstadoPedido from "../models/Estado_Pedido/EstadoPedido";
+import { EstadosPedido } from "../models/Estado_Pedido/enums";
+import { toast } from "sonner";
+import PriceWhitDiscountOrNot from "../utilities/PriceWhitDiscountOrNot";
+import FormatoPrecio from "../utilities/FormatoPrecio";
 
 const DetallePedido = () => {
-  const { id } = useParams()
-  const [pedido, setPedido] = useState(null)
-  const [estadoPedido, setEstadoPedido] = useState("")
-  const [selectKey, setSelectKey] = useState(0)
+  const { id } = useParams();
+  const [pedido, setPedido] = useState(null);
+  const [estadoPedido, setEstadoPedido] = useState("");
+  const [selectKey, setSelectKey] = useState(0);
 
   // 📌 Obtener rol desde Redux
-  const { rol } = useSelector((state) => state.user)
+  const { rol } = useSelector((state) => state.user);
 
   useEffect(() => {
-    axios.get(`http://localhost:5000/Pedidos/viewPedido/${id}`, { withCredentials: true })
-      .then(res => {setPedido(res.data)
-        console.log("pedido - lo que llega al front desde el back" ,res.data)
-      }
-    )
-      .catch(err => {
-        if (err.response?.status === 403) {
-          setPedido({ error: "No tienes permiso para ver este pedido" })
-        } else {
-          console.error(err)
-        }
+    axios
+      .get(`http://localhost:5000/Pedidos/viewPedido/${id}`, {
+        withCredentials: true,
       })
-  }, [id])
+      .then((res) => {
+        setPedido(res.data);
+        console.log("pedido - lo que llega al front desde el back", res.data);
+      })
+      .catch((err) => {
+        if (err.response?.status === 403) {
+          setPedido({ error: "No tienes permiso para ver este pedido" });
+        } else {
+          console.error(err);
+        }
+      });
+  }, [id]);
 
   const cambiarEstado = () => {
-    axios.put(
-      `http://localhost:5000/Pedidos/updateState/${pedido._id}`,
-      { nuevo_estado: estadoPedido },
-      { withCredentials: true }
-    )
+    axios
+      .put(
+        `http://localhost:5000/Pedidos/updateState/${pedido._id}`,
+        { nuevo_estado: estadoPedido },
+        { withCredentials: true }
+      )
       .then(() => {
-        toast.success("Se cambió el estado correctamente")
-        setPedido({ ...pedido, estado: estadoPedido })
-        setEstadoPedido("")
-        setSelectKey(prev => prev + 1)
+        toast.success("Se cambió el estado correctamente");
+        setPedido({ ...pedido, estado: estadoPedido });
+        setEstadoPedido("");
+        setSelectKey((prev) => prev + 1);
       })
-      .catch(err => {
-        console.error("Error al cambiar estado:", err)
-        toast.error("Error al cambiar el estado del pedido.")
-      })
-  }
+      .catch((err) => {
+        console.error("Error al cambiar estado:", err);
+        toast.error("Error al cambiar el estado del pedido.");
+      });
+  };
 
-  if (!pedido) return <p className="p-6 text-gray-500">Cargando pedido...</p>
-  if (pedido.error) return <p className="p-6 text-red-500">{pedido.error}</p>
+  if (!pedido) return <p className="p-6 text-gray-500">Cargando pedido...</p>;
+  if (pedido.error) return <p className="p-6 text-red-500">{pedido.error}</p>;
 
   return (
     <>
@@ -104,7 +115,11 @@ const DetallePedido = () => {
               </SelectTrigger>
               <SelectContent className="bg-white">
                 {EstadosPedido.map((estado) => (
-                  <SelectItem key={estado} value={estado} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                  <SelectItem
+                    key={estado}
+                    value={estado}
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  >
                     <EstadoPedido estado={estado} />
                   </SelectItem>
                 ))}
@@ -115,7 +130,9 @@ const DetallePedido = () => {
               onClick={cambiarEstado}
               disabled={!estadoPedido}
               className={`ml-auto px-4 py-1 rounded text-white ${
-                estadoPedido ? "bg-blue-600 hover:bg-blue-700" : "bg-gray-400 cursor-not-allowed"
+                estadoPedido
+                  ? "bg-blue-600 hover:bg-blue-700"
+                  : "bg-gray-400 cursor-not-allowed"
               }`}
             >
               Cambiar estado
@@ -149,48 +166,63 @@ const DetallePedido = () => {
         )}
 
         {/* Columna Derecha - Productos */}
-        <div className={`bg-white rounded-xl shadow-md p-4 border border-gray-100 ${rol === "admin" ? "md:w-2/3" : "w-full"}`}>
-        {/* w-110 mx-auto */}
+        <div
+          className={`bg-white rounded-xl shadow-md p-4 border border-gray-100 ${
+            rol === "admin" ? "md:w-2/3" : "w-full"
+          }`}
+        >
+          {/* w-110 mx-auto */}
           <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
             <ShoppingCart className="w-5 h-5" /> Productos
           </h3>
           <div className="space-y-4">
             {pedido.productos.map((prod, idx) => (
-              <div key={idx} className="flex gap-4 border rounded-lg shadow-sm bg-gray-50 p-4 items-center">
+              <div
+                key={idx}
+                className="flex gap-4 border rounded-lg shadow-sm bg-gray-50 p-4 items-center"
+              >
                 <div className="w-24 h-24 bg-white rounded border flex items-center justify-center overflow-hidden">
-                {prod.imagenes?.length > 0 ? (
-                  <img
-                    src={prod.imagenes[0].url}  // 👈 usar .url
-                    alt={prod.productoNombre}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <ImageIcon className="text-gray-400 w-8 h-8" />
-                )}
+                  {prod.imagenes?.length > 0 ? (
+                    <img
+                      src={prod.imagenes[0].url} // 👈 usar .url
+                      alt={prod.productoNombre}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <ImageIcon className="text-gray-400 w-8 h-8" />
+                  )}
                 </div>
                 <div className="flex-1 space-y-1 text-left pl-2">
-                  <p className="font-semibold text-blue-800">{prod.productoNombre || "Producto sin nombre"}</p>
-                  <p className="text-sm text-gray-700">Cantidad: {prod.cantidad}</p>
+                  <p className="font-semibold text-blue-800">
+                    {prod.productoNombre || "Producto sin nombre"}
+                  </p>
+                  <p className="text-sm text-gray-700">
+                    Cantidad: {prod.cantidad}
+                  </p>
                   {/* Mostrar variantes si existen */}
                   {prod.variante && (
                     <div className="text-sm text-gray-700 space-y-1">
-                      {Object.entries(prod.variante).map(([atributo, valor]) => (
-                        <div key={atributo} className="flex items-center gap-2">
-                          <span className="capitalize">{atributo}:</span>
-                          {valor.hex ? (
-                            <>
-                              <span
-                                className="w-4 h-4 rounded-full border"
-                                style={{ backgroundColor: valor.hex }}
-                              ></span>
+                      {Object.entries(prod.variante).map(
+                        ([atributo, valor]) => (
+                          <div
+                            key={atributo}
+                            className="flex items-center gap-2"
+                          >
+                            <span className="capitalize">{atributo}:</span>
+                            {valor.hex ? (
+                              <>
+                                <span
+                                  className="w-4 h-4 rounded-full border"
+                                  style={{ backgroundColor: valor.hex }}
+                                ></span>
+                                <span>{valor.name}</span>
+                              </>
+                            ) : (
                               <span>{valor.name}</span>
-                            </>
-                          ) : (
-                            <span>{valor.name}</span>
-                          )}
-                        </div>
-                      ))}
-
+                            )}
+                          </div>
+                        )
+                      )}
                     </div>
                   )}
 
@@ -199,19 +231,48 @@ const DetallePedido = () => {
               </div>
             ))}
             <div className="flex justify-end space-x-4 mt-4 ">
-              <p className="text-xl font-bold text-blue-700">
-                Total: 
-              </p>
+              <p className="text-xl font-bold text-blue-700">Total:</p>
               <FormatoPrecio
                 valor={Number(pedido.total)}
                 className="text-xl font-bold text-blue-700"
               />
             </div>
           </div>
+          {rol !== "admin" &&
+            pedido.estado !== "Entregado" &&
+            pedido.estado !== "Cancelado" && (
+              <button
+                onClick={() => {
+                  if (
+                    window.confirm("¿Seguro que querés cancelar este pedido?")
+                  ) {
+                    axios
+                      .put(
+                        `http://localhost:5000/Pedidos/cancelPedido/${pedido._id}`,
+                        {},
+                        { withCredentials: true }
+                      )
+                      .then(() => {
+                        toast.success("Pedido cancelado correctamente");
+                        setPedido({ ...pedido, estado: "Cancelado" });
+                      })
+                      .catch((err) => {
+                        toast.error(
+                          "Error al cancelar el pedido: " +
+                            (err.response?.data?.error || err.message)
+                        );
+                      });
+                  }
+                }}
+                className="px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700"
+              >
+                Cancelar pedido
+              </button>
+            )}
         </div>
       </div>
     </>
-  )
-}
+  );
+};
 
-export default DetallePedido
+export default DetallePedido;

@@ -43,3 +43,15 @@ class StockModel:
             return self.mongo.db.Stock.find_one({"variante_id": ObjectId(variante_id)})
         return None
 
+    
+    def increase_stock(self, variante_id, cantidad):
+        result = self.mongo.db.Stock.update_one(
+            {"variante_id": ObjectId(variante_id)},
+            {"$inc": {"cantidad": int(cantidad)}}
+        )
+        if result.matched_count:
+            print(f"Aumentando stock de variante {variante_id} en {cantidad}")
+            return self.mongo.db.Stock.find_one({"variante_id": ObjectId(variante_id)})
+        return None
+
+

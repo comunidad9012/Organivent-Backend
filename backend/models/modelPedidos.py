@@ -48,6 +48,7 @@ class PedidosModel:
                     "productoNombre": prod.get("nombre", producto_db.get("nombre_producto", "Producto sin nombre")),
                     "cantidad": cantidad,
                     "variante": variante,  # guardamos la variante plana
+                    "variante_id": prod.get("variante_id"),  # 👈 <--- agregar esto
                     "precio_original": precio_original,
                     "precio_final": precio_final,
                     "precio_unitario": precio_final,

@@ -37,23 +37,25 @@ import { toast } from "sonner";
 import PriceWhitDiscountOrNot from "../utilities/PriceWhitDiscountOrNot";
 import FormatoPrecio from "../utilities/FormatoPrecio";
 
+import Loading from "../utilities/Loading"; // 👈 importar el componente
+
 const DetallePedido = () => {
   const { id } = useParams();
   const [pedido, setPedido] = useState(null);
   const [estadoPedido, setEstadoPedido] = useState("");
   const [selectKey, setSelectKey] = useState(0);
+  const [loading, setLoading] = useState(false); // 👈 nuevo estado
 
-  // 📌 Obtener rol desde Redux
   const { rol } = useSelector((state) => state.user);
 
   useEffect(() => {
+    setLoading(true);
     axios
       .get(`http://localhost:5000/Pedidos/viewPedido/${id}`, {
         withCredentials: true,
       })
       .then((res) => {
         setPedido(res.data);
-        console.log("pedido - lo que llega al front desde el back", res.data);
       })
       .catch((err) => {
         if (err.response?.status === 403) {
@@ -61,28 +63,34 @@ const DetallePedido = () => {
         } else {
           console.error(err);
         }
-      });
+      })
+      .finally(() => setLoading(false));
   }, [id]);
 
-  const cambiarEstado = () => {
+  const cancelarPedido = () => {
+    if (!window.confirm("¿Seguro que querés cancelar este pedido?")) return;
+
+    setLoading(true); // 👈 mostrar loading mientras se hace la petición
     axios
       .put(
-        `http://localhost:5000/Pedidos/updateState/${pedido._id}`,
-        { nuevo_estado: estadoPedido },
+        `http://localhost:5000/Pedidos/cancelPedido/${pedido._id}`,
+        {},
         { withCredentials: true }
       )
       .then(() => {
-        toast.success("Se cambió el estado correctamente");
-        setPedido({ ...pedido, estado: estadoPedido });
-        setEstadoPedido("");
-        setSelectKey((prev) => prev + 1);
+        toast.success("Pedido cancelado correctamente");
+        setPedido({ ...pedido, estado: "Cancelado" });
       })
       .catch((err) => {
-        console.error("Error al cambiar estado:", err);
-        toast.error("Error al cambiar el estado del pedido.");
-      });
+        toast.error(
+          "Error al cancelar el pedido: " +
+            (err.response?.data?.error || err.message)
+        );
+      })
+      .finally(() => setLoading(false)); // 👈 ocultar loading al terminar
   };
 
+  if (loading) return <Loading />; // 👈 mostrar loader si está cargando
   if (!pedido) return <p className="p-6 text-gray-500">Cargando pedido...</p>;
   if (pedido.error) return <p className="p-6 text-red-500">{pedido.error}</p>;
 
@@ -242,28 +250,7 @@ const DetallePedido = () => {
             pedido.estado !== "Entregado" &&
             pedido.estado !== "Cancelado" && (
               <button
-                onClick={() => {
-                  if (
-                    window.confirm("¿Seguro que querés cancelar este pedido?")
-                  ) {
-                    axios
-                      .put(
-                        `http://localhost:5000/Pedidos/cancelPedido/${pedido._id}`,
-                        {},
-                        { withCredentials: true }
-                      )
-                      .then(() => {
-                        toast.success("Pedido cancelado correctamente");
-                        setPedido({ ...pedido, estado: "Cancelado" });
-                      })
-                      .catch((err) => {
-                        toast.error(
-                          "Error al cancelar el pedido: " +
-                            (err.response?.data?.error || err.message)
-                        );
-                      });
-                  }
-                }}
+                onClick={cancelarPedido} // 👈 usar la función centralizada
                 className="px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700"
               >
                 Cancelar pedido

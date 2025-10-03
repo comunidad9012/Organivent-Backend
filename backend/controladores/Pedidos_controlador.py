@@ -16,14 +16,14 @@ def create_pedido():
     response = pedidos_model.create_pedido(data)
     # print("Respuesta de create_pedido en el controlador:", response)
 
-    # # Si se creó bien el pedido, mandamos mail
-    # if "pedido_id" in response and response.get("cliente_email"):
-    #     enviar_confirmacion_pedido(
-    #         response["cliente_email"],
-    #         response.get("cliente_nombre", "Cliente"),
-    #         response["pedido_id"],
-    #         response["total"]
-    #     )
+    # Si se creó bien el pedido, mandamos mail
+    if "pedido_id" in response and response.get("cliente_email"):
+        enviar_confirmacion_pedido(
+            response["cliente_email"],
+            response.get("cliente_nombre", "Cliente"),
+            response["pedido_id"],
+            response["total"]
+        )
 
     return response
 
@@ -145,10 +145,15 @@ def cancel_pedido(token_data, id):
             if variante_id:
                 stock_model.increase_stock(variante_id, cantidad)
 
+        # ✅ Enviar correo al cliente notificando la cancelación
+        email = pedido.get("cliente_email")
+        nombre = pedido.get("cliente_nombre", "Cliente")
+        if email:
+            enviar_actualizacion_estado(email, nombre, pedido["_id"], "Cancelado")
+
         return jsonify({"mensaje": "Pedido cancelado correctamente"}), 200
 
     except Exception as e:
         print("Error al cancelar pedido:", e)
         return jsonify({"error": str(e)}), 500
-
 

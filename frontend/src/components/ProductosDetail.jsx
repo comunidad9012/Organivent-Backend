@@ -136,7 +136,6 @@ function ProductoDetail() {
           <PriceWhitDiscountOrNot product={Producto} />
           <div className="flex items-center mt-2">
             <span className="flex items-center text-yellow-500">★★★★☆</span>
-            {/* VER ESTO DE LAS ESTRELLAS MAS ADELANTE */}
           </div>
 
           <div

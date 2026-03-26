@@ -94,6 +94,29 @@ const DetallePedido = () => {
   if (!pedido) return <p className="p-6 text-gray-500">Cargando pedido...</p>;
   if (pedido.error) return <p className="p-6 text-red-500">{pedido.error}</p>;
 
+  const cambiarEstado = () => {
+    if (!estadoPedido) return;
+
+    setLoading(true);
+    axios
+      .put(
+        `http://localhost:5000/Pedidos/updateState/${pedido._id}`,
+        { nuevo_estado: estadoPedido },
+        { withCredentials: true }
+      )
+      .then(() => {
+        toast.success("Se cambió el estado correctamente");
+        setPedido({ ...pedido, estado: estadoPedido });
+        setEstadoPedido("");
+        setSelectKey((prev) => prev + 1); // para resetear el Select
+      })
+      .catch((err) => {
+        console.error("Error al cambiar estado:", err);
+        toast.error("Error al cambiar el estado del pedido.");
+      })
+      .finally(() => setLoading(false));
+  };
+
   return (
     <>
       {/* Cabecera */}

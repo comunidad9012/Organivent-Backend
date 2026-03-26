@@ -176,9 +176,9 @@ function Navbar() {
               Inicio
             </NavLink>
             
-            <NavLink to="#" icon={null}>
+            {/* <NavLink to="#" icon={null}>
               Ofertas
-            </NavLink>
+            </NavLink> */}
             
             <div className="relative">
               <Categorias />

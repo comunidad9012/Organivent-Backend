@@ -36,17 +36,8 @@ a:hover {
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
   min-width: 320px;
   min-height: 100vh;
-  
-  justify-content: center; /* Centra en eje X */
-  align-items: center;     /* Centra en eje Y */
-  flex-direction: column;  /* Si querés que los elementos se apilen */
-  text-align: center;
-
-
 }
 
 .form-pretty {
@@ -89,7 +80,7 @@ h1 {
   width: 100%;
 }
 
-input {
+.infield input {
   width: 100%;
   padding: 12px 15px;
   background-color: #f3f3f3;
@@ -97,7 +88,7 @@ input {
   outline: none;
 }
 
-label {
+.infield label {
   position: absolute;
   left: 50%;
   top: 100%;
@@ -108,7 +99,7 @@ label {
   transition: 0.3s;
 }
 
-input:focus ~ label {
+.infield input:focus ~ label {
   width: 100%;
 }
 

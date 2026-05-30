@@ -15,6 +15,7 @@ from controladores.descuentos_controlador import Descuentos_bp
 from controladores.Variantes_controlador import Variantes_bp
 from controladores.Stock_controlador import Stock_bp
 from utils.minio_client import client
+from controladores.Banner_controlador import Banner_bp
 
 load_dotenv()
 
@@ -24,6 +25,7 @@ CORS(app, supports_credentials=True, resources={r"/*": {"origins": "http://local
 app.config['MONGO_URI'] = os.getenv('MONGOURL')
 app.secret_key = os.getenv("SECRET_KEY")
 mongo = PyMongo(app)  # Esto debería configurar mongo correctamente
+app.mongo = mongo
 try:
     mongo.cx.server_info()  # Esto lanza error si no puede conectar
     print("✅ Conexión a MongoDB exitosa.")
@@ -54,6 +56,7 @@ app.register_blueprint(Pedidos_bp)
 app.register_blueprint(Descuentos_bp)
 app.register_blueprint(Variantes_bp)
 app.register_blueprint(Stock_bp)
+app.register_blueprint(Banner_bp)
 
 from flask_mail import Message
 from extensiones import mail

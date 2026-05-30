@@ -1,11 +1,14 @@
-import Productos from "../components/Productos"
+import Productos from "../components/Productos";
+import Banner from "../components/Banner";
 
 function User() {
   return (
-    <>
-    <h1 className="text-center">User</h1>
-    <Productos />
-    </>
-    )
+    <div>
+      <Banner />
+
+      <Productos />
+    </div>
+  );
 }
-export default User
+
+export default User;

@@ -1,9 +1,9 @@
 import Productos from "./Productos"
+import Banner from "../components/Banner";
 
 function Home() {
   return (
     <div>
-      <h1>HOME</h1>
       <Productos/>
     </div>
   )

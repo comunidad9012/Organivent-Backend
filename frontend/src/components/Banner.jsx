@@ -36,7 +36,12 @@ export default function Banner() {
   const banner = banners[0];
 
   return (
-    <section className="banner-root">
+    <section
+      className="banner-root"
+      style={{
+      backgroundColor: banner.color_fondo,
+    }}
+    >
       <div className="banner-noise" aria-hidden="true" />
       <div className="banner-accent-line" aria-hidden="true" />
 
@@ -44,14 +49,35 @@ export default function Banner() {
         <div className="banner-text-col">
           <p className="banner-eyebrow">Colección</p>
 
-          <h1 className="banner-title">{banner.titulo}</h1>
+          <h1
+            className="banner-title"
+            style={{
+              color: banner.color_titulo,
+            }}
+          >
+            {banner.titulo}
+          </h1>
 
           {banner.descripcion && (
-            <p className="banner-desc">{banner.descripcion}</p>
+            <p
+              className="banner-desc"
+              style={{
+                color: banner.color_descripcion,
+              }}
+            >
+              {banner.descripcion}
+            </p>
           )}
 
           {banner.texto_boton && banner.link_boton && (
-            <a href={banner.link_boton} className="banner-cta">
+            <a
+              href={banner.link_boton}
+              className="banner-cta"
+              style={{
+                backgroundColor: banner.color_boton,
+                color: banner.color_texto_boton,
+              }}
+            >
               {banner.texto_boton}
               <span className="banner-cta-arrow" aria-hidden="true">
                 →

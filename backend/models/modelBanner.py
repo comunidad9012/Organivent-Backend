@@ -8,7 +8,12 @@ def crear_banner_modelo(
     link_boton,
     imagen_url=None,
     activo=True,
-    orden=1
+    orden=1,
+    color_fondo=None,
+    color_titulo=None,
+    color_descripcion=None,
+    color_boton=None,
+    color_texto_boton=None
 ):
     return {
         "titulo": titulo,
@@ -18,6 +23,11 @@ def crear_banner_modelo(
         "imagen_url": imagen_url,
         "activo": activo,
         "orden": orden,
+        "color_fondo": color_fondo,
+        "color_titulo": color_titulo,
+        "color_descripcion": color_descripcion,
+        "color_boton": color_boton,
+        "color_texto_boton": color_texto_boton,
         "created_at": datetime.utcnow(),
         "updated_at": datetime.utcnow()
     }
@@ -30,7 +40,12 @@ def actualizar_banner_modelo(
     link_boton=None,
     imagen_url=None,
     activo=None,
-    orden=None
+    orden=None,
+    color_fondo=None,
+    color_titulo=None,
+    color_descripcion=None,
+    color_boton=None,
+    color_texto_boton=None
 ):
     data = {}
 
@@ -54,6 +69,21 @@ def actualizar_banner_modelo(
 
     if orden is not None:
         data["orden"] = orden
+
+    if color_fondo is not None:
+        data["color_fondo"] = color_fondo
+
+    if color_titulo is not None:
+        data["color_titulo"] = color_titulo
+
+    if color_descripcion is not None:
+        data["color_descripcion"] = color_descripcion
+
+    if color_boton is not None:
+        data["color_boton"] = color_boton
+
+    if color_texto_boton is not None:
+        data["color_texto_boton"] = color_texto_boton    
 
     data["updated_at"] = datetime.utcnow()
 

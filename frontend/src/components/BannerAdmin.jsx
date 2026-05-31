@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import ColorInput from "./ColorInput";
 
 const API_URL = "http://localhost:5000/api/banners";
 
@@ -12,6 +13,11 @@ function BannerAdmin() {
     link_boton: "",
     activo: true,
     orden: 1,
+    color_fondo: "#F5ECD7",
+    color_titulo: "#2A2218",
+    color_descripcion: "#5C4F3A",
+    color_boton: "#2A2218",
+    color_texto_boton: "#F5ECD7",
   });
 
   const [imagen, setImagen] = useState(null);
@@ -51,6 +57,11 @@ function BannerAdmin() {
       link_boton: "",
       activo: true,
       orden: 1,
+      color_fondo: "#F5ECD7",
+      color_titulo: "#2A2218",
+      color_descripcion: "#5C4F3A",
+      color_boton: "#2A2218",
+      color_texto_boton: "#F5ECD7",
     });
     setImagen(null);
     setModalAbierto(true);
@@ -66,6 +77,11 @@ function BannerAdmin() {
       link_boton: banner.link_boton || "",
       activo: banner.activo ?? true,
       orden: banner.orden || 1,
+      color_fondo: banner.color_fondo || "#F5ECD7",
+      color_titulo: banner.color_titulo || "#2A2218",
+      color_descripcion: banner.color_descripcion || "#5C4F3A",
+      color_boton: banner.color_boton || "#2A2218",
+      color_texto_boton: banner.color_texto_boton || "#F5ECD7",
     });
 
     setImagen(null);
@@ -91,6 +107,11 @@ function BannerAdmin() {
       formData.append("link_boton", form.link_boton);
       formData.append("activo", form.activo);
       formData.append("orden", form.orden);
+      formData.append("color_fondo", form.color_fondo);
+      formData.append("color_titulo", form.color_titulo);
+      formData.append("color_descripcion", form.color_descripcion);
+      formData.append("color_boton", form.color_boton);
+      formData.append("color_texto_boton", form.color_texto_boton);
 
       if (imagen) {
         formData.append("imagen", imagen);
@@ -282,6 +303,43 @@ function BannerAdmin() {
                   onChange={manejarCambio}
                   className="w-full border border-gray-300 rounded-lg px-4 py-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   min="1"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <ColorInput
+                  label="Color de fondo"
+                  name="color_fondo"
+                  value={form.color_fondo}
+                  onChange={manejarCambio}
+                />
+
+                <ColorInput
+                  label="Color del título"
+                  name="color_titulo"
+                  value={form.color_titulo}
+                  onChange={manejarCambio}
+                />
+
+                <ColorInput
+                  label="Color de descripción"
+                  name="color_descripcion"
+                  value={form.color_descripcion}
+                  onChange={manejarCambio}
+                />
+
+                <ColorInput
+                  label="Color del botón"
+                  name="color_boton"
+                  value={form.color_boton}
+                  onChange={manejarCambio}
+                />
+
+                <ColorInput
+                  label="Color del texto del botón"
+                  name="color_texto_boton"
+                  value={form.color_texto_boton}
+                  onChange={manejarCambio}
                 />
               </div>
 

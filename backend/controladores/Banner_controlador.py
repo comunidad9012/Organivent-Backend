@@ -65,6 +65,11 @@ def crear_banner():
         link_boton = request.form.get("link_boton")
         activo = request.form.get("activo", "true") == "true"
         orden = int(request.form.get("orden", 1))
+        color_fondo = request.form.get("color_fondo")
+        color_titulo = request.form.get("color_titulo")
+        color_descripcion = request.form.get("color_descripcion")
+        color_boton = request.form.get("color_boton")
+        color_texto_boton = request.form.get("color_texto_boton")
 
         imagen = request.files.get("imagen")
         imagen_url = None
@@ -92,7 +97,12 @@ def crear_banner():
             link_boton=link_boton,
             imagen_url=imagen_url,
             activo=activo,
-            orden=orden
+            orden=orden,
+            color_fondo=color_fondo,
+            color_titulo=color_titulo,
+            color_descripcion=color_descripcion,
+            color_boton=color_boton,
+            color_texto_boton=color_texto_boton
         )
 
         resultado = current_app.mongo.db.banners.insert_one(nuevo_banner)
@@ -113,6 +123,11 @@ def actualizar_banner(banner_id):
         descripcion = request.form.get("descripcion")
         texto_boton = request.form.get("texto_boton")
         link_boton = request.form.get("link_boton")
+        color_fondo = request.form.get("color_fondo")
+        color_titulo = request.form.get("color_titulo")
+        color_descripcion = request.form.get("color_descripcion")
+        color_boton = request.form.get("color_boton")
+        color_texto_boton = request.form.get("color_texto_boton")
 
         activo = request.form.get("activo")
         if activo is not None:
@@ -148,7 +163,12 @@ def actualizar_banner(banner_id):
             link_boton=link_boton,
             imagen_url=imagen_url,
             activo=activo,
-            orden=orden
+            orden=orden,
+            color_fondo=color_fondo,
+            color_titulo=color_titulo,
+            color_descripcion=color_descripcion,
+            color_boton=color_boton,
+            color_texto_boton=color_texto_boton
         )
 
         current_app.mongo.db.banners.update_one(

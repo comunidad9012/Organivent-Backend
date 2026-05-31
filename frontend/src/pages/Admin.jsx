@@ -1,6 +1,7 @@
 import { useState } from "react";
 import SellerPanel from "../components/SellerPanel";
 import Productos from "../components/Productos";
+import BannerAdmin from "../components/BannerAdmin";
 
 function Admin() {
   const [seccionActiva, setSeccionActiva] = useState(null);
@@ -26,11 +27,9 @@ function Admin() {
     if (seccionActiva === "banner") {
       return (
         <section className="max-w-7xl mx-auto px-6 py-10">
-          <div className="bg-white border rounded-2xl p-8 text-center shadow-sm">
-            <h2 className="text-2xl font-bold mb-2">Personalizar banner</h2>
-            <p className="text-gray-600">
-              Esta sección se conectará después del merge con el módulo de banners.
-            </p>
+          <div className="bg-white border rounded-2xl p-8 shadow-sm">
+            <h2 className="text-2xl font-bold mb-6">Personalizar banner</h2>
+            <BannerAdmin />
           </div>
         </section>
       );

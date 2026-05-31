@@ -1,0 +1,192 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap');
+
+.banner-root {
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  width: 100vw;
+  background-color: #F5ECD7;
+  overflow: hidden;
+  margin-bottom: 2.5rem;
+}
+
+.banner-noise {
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+  pointer-events: none;
+}
+
+.banner-accent-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #C9A96E 0%, #E8C97A 50%, #C9A96E 100%);
+}
+
+.banner-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 4rem 2rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.banner-inner.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.banner-eyebrow {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #9E7E4A;
+  margin: 0 0 1rem;
+}
+
+.banner-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2.6rem, 5vw, 4rem);
+  font-weight: 600;
+  line-height: 1.1;
+  color: #2A2218;
+  margin: 0 0 1.25rem;
+  letter-spacing: -0.01em;
+}
+
+.banner-desc {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1rem;
+  font-weight: 300;
+  line-height: 1.75;
+  color: #5C4F3A;
+  margin: 0 0 2rem;
+  max-width: 38ch;
+}
+
+.banner-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: #F5ECD7;
+  background: #2A2218;
+  padding: 0.875rem 1.75rem;
+  border-radius: 2px;
+  text-decoration: none;
+  transition: background 0.25s ease, gap 0.25s ease;
+}
+
+.banner-cta:hover {
+  background: #3D3325;
+  gap: 16px;
+}
+
+.banner-cta-arrow {
+  font-size: 1rem;
+  transition: transform 0.25s ease;
+}
+
+.banner-cta:hover .banner-cta-arrow {
+  transform: translateX(3px);
+}
+
+.banner-image-col {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.banner-image-frame {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+}
+
+.banner-image-frame::before {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  border: 1px solid #C9A96E;
+  border-radius: 2px;
+  opacity: 0.5;
+  pointer-events: none;
+  z-index: 0;
+  transition: opacity 0.3s ease;
+}
+
+.banner-image-frame:hover::before {
+  opacity: 0.9;
+}
+
+.banner-image-frame img {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-height: 360px;
+  object-fit: cover;
+  border-radius: 2px;
+  display: block;
+}
+
+.banner-corner {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-color: #C9A96E;
+  border-style: solid;
+  opacity: 0.7;
+  z-index: 2;
+}
+
+.banner-corner-tl {
+  top: -8px;
+  left: -8px;
+  border-width: 2px 0 0 2px;
+}
+
+.banner-corner-tr {
+  top: -8px;
+  right: -8px;
+  border-width: 2px 2px 0 0;
+}
+
+.banner-corner-bl {
+  bottom: -8px;
+  left: -8px;
+  border-width: 0 0 2px 2px;
+}
+
+.banner-corner-br {
+  bottom: -8px;
+  right: -8px;
+  border-width: 0 2px 2px 0;
+}
+
+@media (max-width: 768px) {
+  .banner-inner {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding: 3rem 1.5rem;
+  }
+
+  .banner-image-col {
+    order: -1;
+  }
+}

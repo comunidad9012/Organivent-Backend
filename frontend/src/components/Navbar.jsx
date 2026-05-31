@@ -16,106 +16,95 @@ import SearchBar from "./SearchBar";
 
 // Componente para el logo
 const Logo = () => (
-  <Link to={`/${PublicRoutes.HOME}`} className="flex items-center gap-2 group">
+  <Link to={`/${PublicRoutes.HOME}`} className="flex items-center gap-2.5 group shrink-0">
     {/* Círculo con brillo */}
-    <div className="w-10 h-10 rounded-full bg-yellow-400 flex items-center justify-center text-white shadow-md group-hover:scale-110 transition-transform duration-300">
-      <Sparkles className="w-6 h-6 text-white group-hover:text-yellow-200 transition-colors duration-300" />
+    <div className="w-9 h-9 rounded-full bg-amber-400 flex items-center justify-center shadow-sm group-hover:bg-amber-500 transition-colors duration-200">
+      <Sparkles className="w-4 h-4 text-white" />
     </div>
 
     {/* Texto con efecto de brillito */}
-    <span className="text-2xl font-extrabold text-gray-800 group-hover:text-yellow-500 transition-colors duration-300">
+    <span
+      className="text-lg font-semibold text-gray-800 group-hover:text-amber-600 transition-colors duration-200"
+      style={{ letterSpacing: '-0.01em' }}
+    >
       Un destello más
     </span>
   </Link>
 );
 
 // Componente para enlaces de navegación
-const NavLink = ({ to, children, icon: Icon, isActive = false }) => (
-  <Link 
-    to={to} 
-    className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-colors duration-200 ${
-      isActive 
-        ? 'text-blue-600 bg-blue-50' 
-        : 'text-gray-600 hover:text-blue-600 hover:bg-gray-50'
+const NavLink = ({ to, children, isActive = false }) => (
+  <Link
+    to={to}
+    className={`text-sm font-medium transition-colors duration-200 ${
+      isActive ? 'text-gray-900' : 'text-gray-500 hover:text-gray-800'
     }`}
   >
-    {Icon && <Icon className="w-4 h-4" />}
-    <span className="font-medium">{children}</span>
+    {children}
   </Link>
 );
 
 // Componente para el botón del carrito
 const CartButton = ({ totalItems, animate }) => (
   <Link to={`/private/${PrivateRoutes.CART}`}>
-    <button 
-      className="relative flex p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+    <button
+      className="relative flex items-center justify-center w-9 h-9 rounded-lg hover:bg-gray-100 transition-colors duration-200"
       aria-label={`Carrito de compras - ${totalItems} items`}
     >
-      <div className="relative">
-        <ShoppingCart className="w-6 h-6 text-gray-600" />
-        {totalItems > 0 && (
-          <span
-            className={`absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full px-1.5 min-w-[1.25rem] h-5 flex items-center justify-center transition-transform ${
-              animate ? "animate-bounce" : ""
-            }`}
-          >
-            {totalItems > 99 ? '99+' : totalItems}
-          </span>
-        )}
-      </div>
+      <ShoppingCart className="w-5 h-5 text-gray-600" />
+      {totalItems > 0 && (
+        <span
+          className={`absolute -top-1 -right-1 bg-amber-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center ${
+            animate ? 'animate-bounce' : ''
+          }`}
+        >
+          {totalItems > 99 ? '99+' : totalItems}
+        </span>
+      )}
     </button>
   </Link>
 );
 
 // Componente para acciones del usuario autenticado
-const UserActions = ({ userRole, location, totalItems, animate, userState }) => {
-  return (
-    <div className="flex items-center gap-2">
+const UserActions = ({ userRole, location, totalItems, animate }) => (
+  <div className="flex items-center gap-1">
 
-      {userRole === Roles.ADMIN && location.pathname !== `/private/admin/${PrivateRoutes.DESCUENTOS}` && (
-        <NavLink to={`/private/admin/${PrivateRoutes.DESCUENTOS}`}>
-          Descuentos
-        </NavLink>
-      )}
-    
-      {/* Enlaces específicos por rol - sacar y meter al dropbox*/}
-      {userRole === Roles.ADMIN && location.pathname !== `/private/admin/${PrivateRoutes.ADMIN_PEDIDOS}` && (
-        <NavLink to={`/private/admin/${PrivateRoutes.ADMIN_PEDIDOS}`}>
-          Pedidos
-        </NavLink>
-      )}
+    {userRole === Roles.ADMIN && (
+      <Link
+        to="/private/admin"
+        className={`text-sm font-medium px-3 py-1.5 rounded-lg transition-colors duration-200 ${
+          location.pathname === "/private/admin"
+            ? "bg-amber-50 text-amber-700"
+            : "text-gray-500 hover:text-gray-800 hover:bg-gray-100"
+        }`}
+      >
+        Panel vendedor
+      </Link>
+    )}
 
-      {userRole === Roles.ADMIN && location.pathname !== `/private/admin/${PrivateRoutes.CREATE_PRODUCT}` && (
-        <NavLink to={`/private/admin/${PrivateRoutes.CREATE_PRODUCT}`}>
-          Añadir producto
-        </NavLink>
-      )}
+    {userRole === Roles.USER && (
+      <Link
+        to={`/private/${PrivateRoutes.USER_PEDIDOS}`}
+        className={`text-sm font-medium px-3 py-1.5 rounded-lg transition-colors duration-200 ${
+          location.pathname === `/private/${PrivateRoutes.USER_PEDIDOS}`
+            ? "bg-amber-50 text-amber-700"
+            : "text-gray-500 hover:text-gray-800 hover:bg-gray-100"
+        }`}
+      >
+        Mis Pedidos
+      </Link>
+    )}
 
-      {/* Dropdown del perfil */}
-      <div className="flex items-center gap-2">
-        <ProfileDropdown />
-      </div>
+    <ProfileDropdown />
 
-      {/* Mis pedidos */}
-        {userRole === Roles.USER && location.pathname !== `/private/${PrivateRoutes.USER_PEDIDOS}` && (
-        <NavLink to={`/private/${PrivateRoutes.USER_PEDIDOS}`}>
-          Mis Pedidos
-        </NavLink>
-      )}
-      
-      {/* Favoritos para usuarios normales */}
-      {userRole === Roles.USER && (
-        <FavoritesButton />
-      )}
+    {userRole === Roles.USER && <FavoritesButton />}
 
-      {/* Carrito solo para usuarios normales */}
-        {userRole === Roles.USER && location.pathname !== `/private/${PrivateRoutes.CART}` && (
-        <CartButton totalItems={totalItems} animate={animate} />
-      )}
+    {userRole === Roles.USER && (
+      <CartButton totalItems={totalItems} animate={animate} />
+    )}
 
-    </div>
-  );
-};
+  </div>
+);
 
 function Navbar() {
   const location = useLocation();
@@ -149,53 +138,44 @@ function Navbar() {
   }, [triggerCartAnimation]);
 
   return (
-    <div className="fixed top-0 left-0 w-full z-50 bg-white shadow-sm overflow-x-hidden">
-      {/* Primera fila - Logo y búsqueda */}
-      <div className="bg-white px-6 py-2">
-        <div className="flex items-center justify-between w-full">
-          <Logo />
-          <SearchBar />  {/* ✅ ahora usa el que ya maneja FiltersContext */}
-          
-          {!isAuthenticated && (
-            <Link 
-              to={`/${PublicRoutes.LOGIN}`}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium"
-            >
-              Iniciar sesión
-            </Link>
-          )}
+    <div className="fixed top-0 left-0 w-full z-50 bg-white border-b border-gray-100 overflow-x-hidden">
+      {/* Fila superior: logo + búsqueda + login */}
+      <div className="px-6 py-2.5 flex items-center justify-between gap-4">
+        <Logo />
+        <div className="flex-1 max-w-md">
+          <SearchBar />
         </div>
+        {!isAuthenticated && (
+          <Link
+            to={`/${PublicRoutes.LOGIN}`}
+            className="shrink-0 px-4 py-1.5 text-sm font-medium bg-amber-400 text-white rounded-lg hover:bg-amber-500 transition-colors duration-200"
+          >
+            Iniciar sesión
+          </Link>
+        )}
       </div>
-  
-      {/* Segunda fila - Navegación */}
-      <div className="bg-white px-6 py-2 border-b border-gray-200">
-        <div className="flex items-center justify-between w-full">
-          {/* Enlaces izquierda */}
-          <div className="flex items-center gap-6">
-            <NavLink to={`/${PublicRoutes.HOME}`} icon={null}>
-              Inicio
-            </NavLink>
-            
-            <NavLink to="#" icon={null}>
-              Ofertas
-            </NavLink>
-            
-            <div className="relative">
-              <Categorias />
-            </div>
-          </div>
-  
-          {/* Acciones usuario */}
-          {isAuthenticated && (
-            <UserActions 
-              userRole={userState.rol} 
-              location={location}
-              totalItems={totalItems}
-              animate={animate}
-              userState={userState}
-            />
-          )}
+ 
+      {/* Fila inferior: nav links + acciones */}
+      <div className="px-6 py-1.5 flex items-center justify-between border-t border-gray-100">
+        <div className="flex items-center gap-6">
+          <NavLink
+            to={`/${PublicRoutes.HOME}`}
+            isActive={location.pathname === `/${PublicRoutes.HOME}`}
+          >
+            Inicio
+          </NavLink>
+          <NavLink to="#">Ofertas</NavLink>
+          <Categorias />
         </div>
+ 
+        {isAuthenticated && (
+          <UserActions
+            userRole={userState.rol}
+            location={location}
+            totalItems={totalItems}
+            animate={animate}
+          />
+        )}
       </div>
     </div>
   );

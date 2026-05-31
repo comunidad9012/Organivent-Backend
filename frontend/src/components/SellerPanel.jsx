@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { PrivateRoutes } from "../models/routes";
-import { Plus, Percent, ShoppingBag, Store } from "lucide-react";
+import { Plus, Percent, ShoppingBag, Store, Image } from "lucide-react";
 
 const acciones = [
   {
@@ -12,6 +12,16 @@ const acciones = [
     iconoBg: "#FEF9EC",
     iconoColor: "#B45309",
     to: `/private/admin/${PrivateRoutes.CREATE_PRODUCT}`,
+  },
+  {
+    id: "banner",
+    titulo: "Banners",
+    descripcion: "Personaliza los banners principales de la tienda.",
+    boton: "Gestionar banners",
+    icono: Image,
+    iconoBg: "#FFF7ED",
+    iconoColor: "#EA580C",
+    to: `/private/admin/${PrivateRoutes.ADMIN_BANNERS}`,
   },
   {
     id: "descuentos",
@@ -37,25 +47,26 @@ const acciones = [
 
 export default function SellerPanel({ onSelect }) {
   return (
-    <section className="w-full max-w-4xl mx-auto px-6 py-10">
-
+    <section className="w-full max-w-5xl mx-auto px-6 py-10">
       <div className="flex items-center gap-4 mb-10">
         <div className="w-14 h-14 rounded-2xl bg-amber-50 border border-amber-100 flex items-center justify-center shrink-0">
           <Store className="w-7 h-7 text-amber-600" />
         </div>
+
         <div>
           <h1 className="text-3xl font-bold text-gray-900 tracking-tight">
             Panel del vendedor
           </h1>
           <p className="text-sm text-gray-500 mt-0.5">
-            Gestiona tu tienda, productos, pedidos y promociones.
+            Gestiona tu tienda, productos, pedidos, banners y promociones.
           </p>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         {acciones.map((accion) => {
           const Icono = accion.icono;
+
           return (
             <article
               key={accion.id}
@@ -72,23 +83,34 @@ export default function SellerPanel({ onSelect }) {
                 <h3 className="text-base font-semibold text-gray-900">
                   {accion.titulo}
                 </h3>
+
                 <p className="text-sm text-gray-500 leading-relaxed">
                   {accion.descripcion}
                 </p>
               </div>
 
-              <Link
-                to={accion.to}
-                className="inline-flex items-center gap-1.5 text-sm font-medium text-gray-700 bg-gray-50 hover:bg-gray-100 px-4 py-2 rounded-lg transition-colors w-fit"
-              >
-                {accion.boton}
-                <span className="text-gray-400">→</span>
-              </Link>
+              {accion.to ? (
+                <Link
+                  to={accion.to}
+                  className="inline-flex items-center gap-1.5 text-sm font-medium text-gray-700 bg-gray-50 hover:bg-gray-100 px-4 py-2 rounded-lg transition-colors w-fit"
+                >
+                  {accion.boton}
+                  <span className="text-gray-400">→</span>
+                </Link>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => onSelect(accion.action)}
+                  className="inline-flex items-center gap-1.5 text-sm font-medium text-gray-700 bg-gray-50 hover:bg-gray-100 px-4 py-2 rounded-lg transition-colors w-fit"
+                >
+                  {accion.boton}
+                  <span className="text-gray-400">→</span>
+                </button>
+              )}
             </article>
           );
         })}
       </div>
-
     </section>
   );
 }

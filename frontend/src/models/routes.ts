@@ -24,6 +24,7 @@ export const PrivateRoutes: RouteMap ={
     VIEW_PRODUCT_PRIVATE : 'Productos/viewproduct/:id',
     FAVORITES: 'favoritos',
     DESCUENTOS: 'descuentos',
+    ADMIN_BANNERS: 'banners',
 
     CREATE_DESCUENTO: 'descuentos/create',
     // este todavia no esta implementado

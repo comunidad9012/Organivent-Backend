@@ -9,6 +9,7 @@ import FormProductoModern from "../components/FormProducto";
 import DetallePedido from "../components/DetallePedido";
 import FormDescuento from "../components/FormDescuento";
 import ListDiscount from "../components/ListDiscount";
+import BannerAdmin from "../components/BannerAdmin";
 
 const Admin = lazy(() => import('../pages/Admin'));
 
@@ -23,6 +24,7 @@ function PrivateAdmin() {
 
           <Route path={PrivateRoutes.ADMIN_PEDIDOS} element={<ListaPedidos />} />
           <Route path={PrivateRoutes.DESCUENTOS} element={<ListDiscount />} />
+          <Route path={PrivateRoutes.ADMIN_BANNERS} element={<BannerAdmin />} />
           <Route path={PrivateRoutes.CREATE_DESCUENTO} element={<FormDescuento />} />
           {/* arregla para que sea como con productos */}
           <Route path={`${PrivateRoutes.UPDATE_DESCUENTO}`} element={<FormDescuento isEdit={true} />} />

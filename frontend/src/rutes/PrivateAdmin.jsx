@@ -9,7 +9,7 @@ import FormProductoModern from "../components/FormProducto";
 import DetallePedido from "../components/DetallePedido";
 import FormDescuento from "../components/FormDescuento";
 import ListDiscount from "../components/ListDiscount";
-import BannerAdmin from "../components/BannerAdmin";
+import BannerAdmin from "../components/banner/BannerAdmin";
 
 const Admin = lazy(() => import('../pages/Admin'));
 

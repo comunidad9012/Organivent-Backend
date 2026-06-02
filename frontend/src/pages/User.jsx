@@ -1,5 +1,5 @@
 import Productos from "../components/Productos";
-import Banner from "../components/Banner";
+import Banner from "../components/banner/Banner";
 
 function User() {
   return (

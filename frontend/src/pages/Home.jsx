@@ -1,11 +1,13 @@
-import Productos from "../components/Productos"
+import BannerCarousel from "../components/banner/BannerCarousel";
+import Productos from "../components/Productos";
 
 function Home() {
   return (
     <>
-    <h1 className="text-center">POR DIOOOOOSS</h1>
-    <Productos />
+      <BannerCarousel />
+      <Productos />
     </>
-  )
+  );
 }
-export default Home
+
+export default Home;

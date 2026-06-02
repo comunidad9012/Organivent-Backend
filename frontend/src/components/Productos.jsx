@@ -79,102 +79,104 @@ function Productos() {
   }
 
   return (
-    <>
-      <h1 className="text-2xl font-bold">Productos</h1>
+    <section className="productos-section">
+      <div className="productos-container">
+        <h1 className="productos-title">Productos</h1>
         {/* Zona principal */}
-        
-          <div className="max-w-3xl mx-auto px-2 py-6">
-            {productos.length > 0 ? (
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {currentProducts.map((product) => (
-                  <div
-                    key={product._id}
-                    className="group bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 border border-gray-200 overflow-hidden flex flex-col cursor-pointer"
-                    role="button"
-                    tabIndex={0}
-                    onClick={(e) => handleCardNav(e, product._id)}
-                    onKeyDown={(e) => handleCardKey(e, product._id)}
-                  >
-                    <div className="relative aspect-square bg-white overflow-hidden group">
-                      {/* Botón favorito - asegura que no navegue si es clickeado */}
-                      <FavButton productId={product._id} data-no-nav />
+      
+        <div className="productos-grid-wrapper">
+          {productos.length > 0 ? (
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              {currentProducts.map((product) => (
+                <div
+                  key={product._id}
+                  className="group bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 border border-gray-200 overflow-hidden flex flex-col cursor-pointer"
+                  role="button"
+                  tabIndex={0}
+                  onClick={(e) => handleCardNav(e, product._id)}
+                  onKeyDown={(e) => handleCardKey(e, product._id)}
+                >
+                  <div className="relative aspect-square bg-white overflow-hidden group">
+                    {/* Botón favorito - asegura que no navegue si es clickeado */}
+                    <FavButton productId={product._id} data-no-nav />
 
-                      {product.colores?.length > 0 && (
-                        <p className="absolute top-2 left-2 z-10 text-xs bg-white/70 backdrop-blur-sm px-2 py-1 rounded-full text-gray-600">
-                          {product.colores.length} colores!
-                        </p>
-                      )}
+                    {product.colores?.length > 0 && (
+                      <p className="absolute top-2 left-2 z-10 text-xs bg-white/70 backdrop-blur-sm px-2 py-1 rounded-full text-gray-600">
+                        {product.colores.length} colores!
+                      </p>
+                    )}
 
-                      {/* Imagen (no hace falta link) */}
-                      <img
-                        src={product.imagenes?.[0]?.url || "http://localhost:5000/imgs/imagenes/default.jpg"}
-                        alt={product.nombre_producto}
-                        className="w-full h-full object-contain p-2 group-hover:scale-105 transition-transform duration-300"
-                        // si por algún motivo querés asegurar que no burbujee:
-                        onClick={(e) => e.stopPropagation()}
-                      />
-                    </div>
-
-                    {/* Contenido clickeable */}
-                    <div className="block flex-1 flex flex-col p-3 bg-gray-50">
-                      <PriceWhitDiscountOrNot product={product} />
-
-                      <h3 className="font-semibold text-gray-900 text-sm line-clamp-2 leading-snug group-hover:text-black transition-colors min-h-[2.5rem]">
-                        {product.nombre_producto}
-                      </h3>
-
-                      {/* Admin Actions */}
-                      {userState.rol === Roles.ADMIN && (
-                        <div className="mt-auto flex justify-end gap-2">
-                          {/* Editar: es un link pero marcado para no disparar la navegación del card */}
-                          <Link
-                            to={`/private/admin/Productos/update/${product._id}`}
-                            onClick={(e) => e.stopPropagation()}
-                            data-no-nav
-                            className="p-2 rounded-lg bg-yellow-400 hover:bg-yellow-500 text-white shadow"
-                          >
-                            <SquarePen size={18} />
-                          </Link>
-
-                          {/* DeleteItem: asegurate que el botón interno tenga data-no-nav o stopPropagation */}
-                          <DeleteItem
-                            item={product}
-                            itemName={product.nombre_producto}
-                            resource="Productos"
-                            setItems={setProductos}
-                            getId={(p) => p._id}
-                          />
-                        </div>
-                      )}
-                    </div>
+                    {/* Imagen (no hace falta link) */}
+                    <img
+                      src={product.imagenes?.[0]?.url || "http://localhost:5000/imgs/imagenes/default.jpg"}
+                      alt={product.nombre_producto}
+                      className="w-full h-full object-contain p-2 group-hover:scale-105 transition-transform duration-300"
+                      // si por algún motivo querés asegurar que no burbujee:
+                      onClick={(e) => e.stopPropagation()}
+                    />
                   </div>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-12">
-                <ShoppingCart
-                  size={96}
-                  className="mx-auto text-gray-400 mb-4"
-                />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">
-                  No hay productos disponibles
-                </h3>
-                <p className="text-gray-600">
-                  Intenta ajustar tus filtros o vuelve más tarde.
-                </p>
-              </div>
-            )}
-          </div>
 
-          {/* Paginación */}
-          <Paginacion
-            totalItems={productos.length}
-            itemsPerPage={itemsPerPage}
-            currentPage={currentPage}
-            setCurrentPage={setCurrentPage}
-          />
-    </>
-  );
+                  {/* Contenido clickeable */}
+                  <div className="block flex-1 flex flex-col p-3 bg-gray-50">
+                    <PriceWhitDiscountOrNot product={product} />
+
+                    <h3 className="font-semibold text-gray-900 text-sm line-clamp-2 leading-snug group-hover:text-black transition-colors min-h-[2.5rem]">
+                      {product.nombre_producto}
+                    </h3>
+
+                    {/* Admin Actions */}
+                    {userState.rol === Roles.ADMIN && (
+                      <div className="mt-auto flex justify-end gap-2">
+                        {/* Editar: es un link pero marcado para no disparar la navegación del card */}
+                        <Link
+                          to={`/private/admin/Productos/update/${product._id}`}
+                          onClick={(e) => e.stopPropagation()}
+                          data-no-nav
+                          className="p-2 rounded-lg bg-yellow-400 hover:bg-yellow-500 text-white shadow"
+                        >
+                          <SquarePen size={18} />
+                        </Link>
+
+                        {/* DeleteItem: asegurate que el botón interno tenga data-no-nav o stopPropagation */}
+                        <DeleteItem
+                          item={product}
+                          itemName={product.nombre_producto}
+                          resource="Productos"
+                          setItems={setProductos}
+                          getId={(p) => p._id}
+                        />
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <ShoppingCart
+                size={96}
+                className="mx-auto text-gray-400 mb-4"
+              />
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                No hay productos disponibles
+              </h3>
+              <p className="text-gray-600">
+                Intenta ajustar tus filtros o vuelve más tarde.
+              </p>
+            </div>
+          )}
+        </div>
+
+        {/* Paginación */}
+        <Paginacion
+          totalItems={productos.length}
+          itemsPerPage={itemsPerPage}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+        />
+      </div>
+    </section>
+  );       
 }
 
 export default Productos;

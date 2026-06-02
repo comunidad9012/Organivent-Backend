@@ -138,7 +138,7 @@ function Navbar() {
   }, [triggerCartAnimation]);
 
   return (
-    <div className="fixed top-0 left-0 w-full z-50 bg-white border-b border-gray-100 overflow-x-hidden">
+    <div className="fixed top-0 left-0 w-full z-50 bg-white overflow-x-hidden">
       {/* Fila superior: logo + búsqueda + login */}
       <div className="px-6 py-2.5 flex items-center justify-between gap-4">
         <Logo />

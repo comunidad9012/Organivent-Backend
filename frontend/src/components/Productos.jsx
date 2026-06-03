@@ -20,6 +20,8 @@ function Productos() {
   const { filters, setFilters } = useContext(FiltersContext);
   const userState = useSelector((store) => store.user);
 
+  const [orden, setOrden] = useState("relevantes");
+
   useEffect(() => {
   const fetchProductos = async () => {
     try {
@@ -53,10 +55,27 @@ function Productos() {
   fetchProductos();
 }, [filters.query, filters.id_categoria]);
 
+  const productosOrdenados = [...productos].sort((a, b) => {
+    const precioA = Number(a.precio_final ?? a.precio_venta ?? 0);
+    const precioB = Number(b.precio_final ?? b.precio_venta ?? 0);
+
+    const originalA = Number(a.precio_original ?? a.precio_venta ?? precioA);
+    const originalB = Number(b.precio_original ?? b.precio_venta ?? precioB);
+
+    const descuentoA = originalA - precioA;
+    const descuentoB = originalB - precioB;
+
+    if (orden === "menor_precio") return precioA - precioB;
+    if (orden === "mayor_precio") return precioB - precioA;
+    if (orden === "mayor_descuento") return descuentoB - descuentoA;
+
+    return 0;
+  });
+
   // paginación
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const currentProducts = productos.slice(startIndex, endIndex);
+  const currentProducts = productosOrdenados.slice(startIndex, endIndex);
 
   //un stopPropagation para que no navegue al detalle del producto cuando clickeo en los botones de editar o borrar
   const navigate = useNavigate();
@@ -82,6 +101,26 @@ function Productos() {
     <section className="productos-section">
       <div className="productos-container">
         <h1 className="productos-title">Productos</h1>
+
+        <div className="flex justify-end mb-6">
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-gray-500">Ordenar por</span>
+            <select
+              value={orden}
+              onChange={(e) => {
+                setOrden(e.target.value);
+                setCurrentPage(1);
+              }}
+              className="border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-amber-400"
+            >
+              <option value="relevantes">Más relevantes</option>
+              <option value="menor_precio">Menor precio</option>
+              <option value="mayor_precio">Mayor precio</option>
+              <option value="mayor_descuento">Mayor descuento</option>
+            </select>
+          </div>
+        </div>
+
         {/* Zona principal */}
       
         <div className="productos-grid-wrapper">
@@ -169,7 +208,7 @@ function Productos() {
 
         {/* Paginación */}
         <Paginacion
-          totalItems={productos.length}
+          totalItems={productosOrdenados.length}
           itemsPerPage={itemsPerPage}
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}

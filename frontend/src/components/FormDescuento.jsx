@@ -8,6 +8,7 @@ const FormDescuento = ({ initialData = null, isEdit = false }) => {
   const [tipo, setTipo] = useState("porcentaje");
   const [formData, setFormData] = useState({
     nombre: "",
+    codigo: "",
     valor: "",
     productos: [],
     categorias: [],
@@ -27,6 +28,7 @@ const FormDescuento = ({ initialData = null, isEdit = false }) => {
 
           setFormData({
             nombre: data.nombre || "",
+            codigo: data.codigo || "",
             valor: data.valor || "",
             productos: data.productos || [],
             categorias: data.categorias || [],
@@ -85,13 +87,14 @@ const FormDescuento = ({ initialData = null, isEdit = false }) => {
 
     const dataToSend = {
       nombre: formData.nombre,
+      codigo: formData.codigo.trim().toUpperCase(),
       tipo,
       valor: parseFloat(formData.valor),
       productos: formData.productos,
       categorias: formData.categorias,
       activo: true,
       fecha_inicio: new Date().toISOString(),
-      fecha_fin: new Date("2025-12-31T23:59:59Z").toISOString(),
+      fecha_fin: new Date("2027-12-31T23:59:59Z").toISOString(),
     };
 
     try {
@@ -150,16 +153,18 @@ const FormDescuento = ({ initialData = null, isEdit = false }) => {
 
       {/* Campos */}
       <div>
-        <p className="block font-medium mb-1">Nombre del cupón</p>
+        <p className="block font-medium mb-1">Código del cupón</p>
         <input
           type="text"
-          name="nombre"
-          value={formData.nombre}
+          name="codigo"
+          value={formData.codigo}
           onChange={handleChange}
-          className="w-full p-2 border rounded"
-          placeholder="Ej. OFERTAVERANO"
-          required
+          className="w-full p-2 border rounded uppercase"
+          placeholder="Ej. VERANO20"
         />
+        <p className="text-xs text-gray-400 mt-1">
+          Dejalo vacío si querés que sea un descuento automático.
+        </p>
       </div>
 
       <div>

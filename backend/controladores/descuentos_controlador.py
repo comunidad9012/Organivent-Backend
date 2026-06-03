@@ -1,5 +1,6 @@
 from flask import Blueprint, request, current_app, jsonify
 from models.modelDescuentos import Descuento
+from datetime import datetime
 
 Descuentos_bp = Blueprint("Descuentos", __name__, url_prefix="/Descuentos")
 
@@ -49,6 +50,97 @@ def descuentos_activos():
 
     return jsonify(activos), 200
 
+
+@Descuentos_bp.post("/validarCupon")
+def validar_cupon():
+    data = request.json
+
+    if not data:
+        return jsonify({"error": "Se requieren datos"}), 400
+
+    codigo = data.get("codigo", "").strip().upper()
+    productos = data.get("productos", [])
+
+    if not codigo:
+        return jsonify({"error": "Ingresá un código de cupón"}), 400
+
+    if not productos:
+        return jsonify({"error": "El carrito está vacío"}), 400
+
+    descuento_model = Descuento(current_app)
+    cupon = descuento_model.obtener_por_codigo(codigo)
+
+    if not cupon:
+        return jsonify({"error": "Cupón inválido o inactivo"}), 404
+
+    hoy = datetime.now()
+
+    if cupon.get("fecha_inicio") and cupon["fecha_inicio"] > hoy:
+        return jsonify({"error": "El cupón todavía no está disponible"}), 400
+
+    if cupon.get("fecha_fin") and cupon["fecha_fin"] < hoy:
+        return jsonify({"error": "El cupón está vencido"}), 400
+
+    productos_cupon = [str(p) for p in cupon.get("productos", [])]
+    categorias_cupon = [str(c) for c in cupon.get("categorias", [])]
+
+    total_original = 0
+    total_con_cupon = 0
+    descuento_total = 0
+    productos_aplicados = []
+
+    for item in productos:
+        producto_id = str(item.get("_id") or item.get("productoId"))
+        categoria_id = str(item.get("categoria", ""))
+        cantidad = int(item.get("quantity") or item.get("cantidad") or 1)
+
+        precio_base = float(
+            item.get("precio_final")
+            or item.get("precio_venta")
+            or item.get("precio_original")
+            or 0
+        )
+
+        subtotal_original = precio_base * cantidad
+        subtotal_final = subtotal_original
+
+        aplica_por_producto = producto_id in productos_cupon
+        aplica_por_categoria = categoria_id in categorias_cupon
+        aplica_general = not productos_cupon and not categorias_cupon
+
+        if aplica_general or aplica_por_producto or aplica_por_categoria:
+            if cupon["tipo"] == "porcentaje":
+                descuento_item = subtotal_original * (float(cupon["valor"]) / 100)
+            elif cupon["tipo"] == "monto":
+                descuento_item = min(float(cupon["valor"]), subtotal_original)
+            else:
+                descuento_item = 0
+
+            subtotal_final = subtotal_original - descuento_item
+            descuento_total += descuento_item
+
+            productos_aplicados.append({
+                "productoId": producto_id,
+                "descuento": round(descuento_item, 2)
+            })
+
+        total_original += subtotal_original
+        total_con_cupon += subtotal_final
+
+    if descuento_total <= 0:
+        return jsonify({"error": "El cupón no aplica a los productos del carrito"}), 400
+
+    return jsonify({
+        "ok": True,
+        "codigo": cupon.get("codigo"),
+        "nombre": cupon.get("nombre"),
+        "tipo": cupon.get("tipo"),
+        "valor": cupon.get("valor"),
+        "descuento_total": round(descuento_total, 2),
+        "total_original": round(total_original, 2),
+        "total_final": round(total_con_cupon, 2),
+        "productos_aplicados": productos_aplicados
+    }), 200
 
 # Eliminar un descuento
 @Descuentos_bp.delete("/deleteDescuentos/<id>")

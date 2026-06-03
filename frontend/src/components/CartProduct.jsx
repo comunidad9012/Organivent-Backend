@@ -38,14 +38,29 @@ function CartProduct({ product , selectedColor}) {
   // };
 //---------------------------------
 
-  const addToCart = () => {
-    const productWithColor = {
-      ...product,
-      selectedColor: selectedColor || null, // null si no se pasa nada
-    };
-    dispatch({ type: "ADD_TO_CART", payload: productWithColor });
-    setAdded(true);
+const addToCart = () => {
+  const precioOriginal = Number(
+    product.precio_original ?? product.precio_venta ?? 0
+  );
+
+  const precioFinal = Number(
+    product.precio_final ?? product.precio_venta ?? precioOriginal
+  );
+
+  const productWithColor = {
+    ...product,
+    selectedColor: selectedColor || null,
+
+    precio_original: precioOriginal,
+    precio_final: precioFinal,
+    descuento_aplicado: product.descuento_aplicado || null,
   };
+
+  console.log("Producto agregado al carrito:", productWithColor);
+
+  dispatch({ type: "ADD_TO_CART", payload: productWithColor });
+  setAdded(true);
+};
 
   const removeFromCart = () => {
     dispatch({ type: "REMOVE_FROM_CART", payload: product });

@@ -25,6 +25,7 @@ class Descuento:
 
         descuento_doc = {
             "nombre": data.get("nombre"),
+            "codigo": data.get("codigo", "").strip().upper(),
             "tipo": data.get("tipo"),
             "valor": float(data.get("valor", 0)),
             "productos": productos,
@@ -44,6 +45,24 @@ class Descuento:
     #         "fecha_inicio": {"$lte": hoy},
     #         "fecha_fin": {"$gte": hoy}
     #     }))
+
+
+    def obtener_por_codigo(self, codigo):
+        if not codigo:
+            return None
+
+        codigo_normalizado = codigo.strip().upper()
+
+        descuento = self.mongo.db.descuentos.find_one({
+            "codigo": codigo_normalizado,
+            "activo": True
+        })
+
+        if not descuento:
+            return None
+
+        return descuento
+
 
     def obtener_descuentos_activos(self):
         hoy = datetime.now()

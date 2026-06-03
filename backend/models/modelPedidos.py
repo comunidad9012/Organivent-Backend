@@ -47,12 +47,27 @@ class PedidosModel:
                 })
                 print("Producto añadido al pedido:", productos_finales[-1])
 
+            subtotal_productos = total
+            descuento_cupon = float(data.get("descuento_cupon", 0) or 0)
+            total_final = float(data.get("total", subtotal_productos) or subtotal_productos)
+
+            if descuento_cupon > 0:
+                total_final = max(subtotal_productos - descuento_cupon, 0)
+
             pedido_data = {
                 'usuarioId': data['usuarioId'],
                 'cliente_nombre': data.get('cliente_nombre'),
                 'cliente_email': data.get('cliente_email'),
                 'productos': productos_finales,
-                'total': total,
+
+                # Totales
+                'subtotal': subtotal_productos,
+                'descuento_cupon': descuento_cupon,
+                'total': total_final,
+
+                # Cupón aplicado
+                'cupon': data.get('cupon'),
+
                 'estado': 'Pendiente',
                 'fecha': datetime.now()
             }
@@ -66,7 +81,7 @@ class PedidosModel:
                 "pedido_id": str(result.inserted_id),
                 "cliente_email": pedido_data.get("cliente_email"),
                 "cliente_nombre": pedido_data.get("cliente_nombre"),
-                "total": total
+                "total": total_final
             }
         else:
             return {"error": "Datos insuficientes para crear el pedido"}

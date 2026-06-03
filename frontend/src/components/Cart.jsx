@@ -8,6 +8,10 @@ import { PrivateRoutes } from "../models/routes";
 
 export default function Cart() {
   const { cart, dispatch } = useCart();
+  const [codigoCupon, setCodigoCupon] = useState("");
+  const [cuponAplicado, setCuponAplicado] = useState(null);
+  const [errorCupon, setErrorCupon] = useState("");
+  const [cargandoCupon, setCargandoCupon] = useState(false);
   const [subtotal, setSubtotal] = useState(0);
   const { handleComprar, loading } = useCrearPedido();
 
@@ -20,21 +24,90 @@ export default function Cart() {
   // }, [cart]);
 
   useEffect(() => {
-    const totalConDescuento = cart.reduce(
-      (acc, item) => acc + item.precio_final * (item.quantity || 1), 
-      0
-    );
-    const totalSinDescuento = cart.reduce(
-      (acc, item) => acc + item.precio_original * (item.quantity || 1), 
-      0
-    );
+    const totalConDescuento = cart.reduce((acc, item) => {
+      const precioFinal = Number(
+        item.precio_final ?? item.precio_venta ?? 0
+      );
+  
+      return acc + precioFinal * (item.quantity || 1);
+    }, 0);
+  
+    const totalSinDescuento = cart.reduce((acc, item) => {
+      const precioOriginal = Number(
+        item.precio_original ?? item.precio_venta ?? item.precio_final ?? 0
+      );
+  
+      return acc + precioOriginal * (item.quantity || 1);
+    }, 0);
+  
     setSubtotal(totalConDescuento);
     setAhorro(totalSinDescuento - totalConDescuento);
+  
+    setCuponAplicado(null);
+    setErrorCupon("");
   }, [cart]);
 
 
+  const aplicarCupon = async () => {
+    if (!codigoCupon.trim()) {
+      setErrorCupon("Ingresá un código de cupón.");
+      return;
+    }
+  
+    setCargandoCupon(true);
+    setErrorCupon("");
+  
+    try {
+      const productosParaValidar = cart.map((item) => ({
+        _id: item._id,
+        productoId: item._id,
+        categoria: item.categoria,
+        precio_original: item.precio_original,
+        precio_final: item.precio_final,
+        precio_venta: item.precio_venta,
+        quantity: item.quantity || 1,
+      }));
+  
+      const res = await fetch("http://localhost:5000/Descuentos/validarCupon", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          codigo: codigoCupon,
+          productos: productosParaValidar,
+        }),
+      });
+  
+      const data = await res.json();
+  
+      if (!res.ok) {
+        setCuponAplicado(null);
+        setErrorCupon(data.error || "No se pudo aplicar el cupón.");
+        return;
+      }
+  
+      setCuponAplicado(data);
+      setCodigoCupon(data.codigo || codigoCupon.toUpperCase());
+    } catch (error) {
+      console.error("Error aplicando cupón:", error);
+      setCuponAplicado(null);
+      setErrorCupon("No se pudo conectar con el servidor.");
+    } finally {
+      setCargandoCupon(false);
+    }
+  };
+
+  const quitarCupon = () => {
+    setCuponAplicado(null);
+    setErrorCupon("");
+    setCodigoCupon("");
+  };
+
   const isEmpty = cart.length === 0;
   const hasDiscounts = ahorro > 0;
+  const descuentoCupon = cuponAplicado?.descuento_total || 0;
+  const totalFinal = Math.max(subtotal - descuentoCupon, 0);  
 
   return (
     <div className="flex flex-col md:flex-row gap-4 p-6 min-h-[60vh]">
@@ -161,19 +234,88 @@ export default function Cart() {
               <FormatoPrecio valor={-Number(ahorro)} />
             </div>
           )}
+
+          <div className="border-t border-gray-100 pt-4 mt-4 mb-4">
+            <p className="text-sm font-semibold text-gray-700 mb-2">
+              Código de cupón
+            </p>
+
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={codigoCupon}
+                onChange={(e) => {
+                  setCodigoCupon(e.target.value.toUpperCase());
+                  setErrorCupon("");
+                }}
+                placeholder="Ej. VERANO20"
+                className="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm uppercase text-gray-800 focus:outline-none focus:ring-2 focus:ring-amber-400"
+                disabled={!!cuponAplicado || cargandoCupon}
+              />
+
+              {cuponAplicado ? (
+                <button
+                  type="button"
+                  onClick={quitarCupon}
+                  className="px-3 py-2 rounded-lg text-sm font-semibold bg-gray-100 text-gray-600 hover:bg-gray-200"
+                >
+                  Quitar
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={aplicarCupon}
+                  disabled={cargandoCupon}
+                  className="px-3 py-2 rounded-lg text-sm font-semibold bg-amber-500 text-white hover:bg-amber-600 disabled:opacity-50"
+                >
+                  {cargandoCupon ? "..." : "Aplicar"}
+                </button>
+              )}
+            </div>
+
+            {errorCupon && (
+              <p className="text-xs text-red-500 mt-2">
+                {errorCupon}
+              </p>
+            )}
+
+            {cuponAplicado && (
+              <p className="text-xs text-green-600 mt-2">
+                Cupón {cuponAplicado.codigo} aplicado correctamente.
+              </p>
+            )}
+          </div>
+
           {/* <div className="flex justify-between mb-2">
             <span>Envío</span>
             <span className="text-green-500">Gratis</span>
           </div> */}
+          {cuponAplicado && (
+            <div className="flex justify-between mb-2 text-amber-600">
+              <span>Cupón {cuponAplicado.codigo}</span>
+              <FormatoPrecio valor={-Number(descuentoCupon)} />
+            </div>
+          )}
           <div className="flex justify-between font-bold mb-4">
             <span>Total</span>
-            <FormatoPrecio valor={Number(subtotal)} className="text-xl font-bold text-blue-700" />
+            <FormatoPrecio valor={Number(totalFinal)} className="text-xl font-bold text-blue-700" />
           </div>
 
 
           {loading && <Loading />}
 
-          <button className="button-pretty w-full" onClick={handleComprar} disabled={loading}>
+          <button
+            className="button-pretty w-full"
+            onClick={() =>
+              handleComprar({
+                cupon: cuponAplicado,
+                descuento_cupon: descuentoCupon,
+                total_final: totalFinal,
+                subtotal_sin_cupon: subtotal,
+              })
+            }
+            disabled={loading}
+          >
             {loading ? "Procesando..." : "Continuar compra"}
           </button>
 

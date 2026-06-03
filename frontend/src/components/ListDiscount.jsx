@@ -48,7 +48,16 @@ function ListDiscount() {
               className={`p-5 bg-white rounded-lg shadow-lg border-l-4 ${bordeColor} flex flex-col`}
             >
               <div className="flex justify-between items-center">
-                <p className="font-bold text-lg">{d.nombre}</p>
+                <div>
+                  <p className="font-bold text-lg">{d.nombre}</p>
+
+                  {d.codigo && (
+                    <p className="text-xs text-gray-400 font-mono mt-1">
+                      Código: {d.codigo}
+                    </p>
+                  )}
+                </div>
+
                 <span
                   className={`px-2 py-1 text-sm rounded ${
                     d.activo

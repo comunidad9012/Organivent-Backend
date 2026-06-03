@@ -93,6 +93,115 @@ class PedidosModel:
         return self._serialize_pedidos(pedidos)
 
 
+    def _obtener_imagenes_producto(self, imagenes):
+        imagenes_limpias = []
+
+        if not imagenes:
+            return imagenes_limpias
+
+        for img in imagenes:
+            # Si ya viene como objeto con url
+            if isinstance(img, dict) and img.get("url"):
+                imagenes_limpias.append({
+                    "_id": str(img.get("_id", "")),
+                    "filename": img.get("filename"),
+                    "url": img.get("url")
+                })
+                continue
+
+            # Si viene como ObjectId o string
+            try:
+                img_id = ObjectId(str(img))
+            except Exception:
+                continue
+
+            imagen_db = self.mongo.db.Imagenes.find_one({"_id": img_id})
+
+            if imagen_db:
+                imagenes_limpias.append({
+                    "_id": str(imagen_db["_id"]),
+                    "filename": imagen_db.get("filename"),
+                    "url": imagen_db.get("url")
+                })
+
+        return imagenes_limpias
+
+
+    def productos_mas_vendidos(self, limite=8):
+        pipeline = [
+            {
+                "$match": {
+                    "estado": {"$ne": "Cancelado"}
+                }
+            },
+            {
+                "$unwind": "$productos"
+            },
+            {
+                "$group": {
+                    "_id": "$productos.productoId",
+                    "unidades_vendidas": {
+                        "$sum": "$productos.cantidad"
+                    },
+                    "total_recaudado": {
+                        "$sum": "$productos.subtotal"
+                    },
+                    "imagenes_pedido": {
+                        "$first": "$productos.imagenes"
+                    }
+                }
+            },
+            {
+                "$sort": {
+                    "unidades_vendidas": -1
+                }
+            },
+            {
+                "$limit": limite
+            }
+        ]
+
+        ranking = list(self.mongo.db.Pedidos.aggregate(pipeline))
+        productos_finales = []
+
+        for item in ranking:
+            producto_id = item["_id"]
+
+            try:
+                producto = self.mongo.db.Productos.find_one({
+                    "_id": ObjectId(producto_id)
+                })
+            except Exception:
+                producto = None
+
+            if not producto:
+                continue
+
+            imagenes_limpias = self._obtener_imagenes_producto(
+                producto.get("imagenes", [])
+            )
+
+            if not imagenes_limpias:
+                imagenes_limpias = self._obtener_imagenes_producto(
+                    item.get("imagenes_pedido", [])
+                )
+
+            productos_finales.append({
+                "_id": str(producto["_id"]),
+                "nombre_producto": producto.get("nombre_producto"),
+                "descripcion": producto.get("descripcion"),
+                "precio_venta": producto.get("precio_venta"),
+                "precio_original": producto.get("precio_original", producto.get("precio_venta")),
+                "precio_final": producto.get("precio_final", producto.get("precio_venta")),
+                "imagenes": imagenes_limpias,
+                "categoria": str(producto.get("categoria", "")),
+                "unidades_vendidas": item.get("unidades_vendidas", 0),
+                "total_recaudado": round(item.get("total_recaudado", 0), 2),
+            })
+
+        return productos_finales
+
+
     def show_pedidos_by_user(self, user_id):
         # Devuelve los pedidos de un usuario específico.
         pedidos = list(self.mongo.db.Pedidos.find({"usuarioId": user_id}).sort('_id', -1))

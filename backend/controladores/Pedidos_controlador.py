@@ -36,6 +36,18 @@ def show_pedidos(data): #data viene del token decodificado
     else:
         return pedidos_model.show_pedidos_by_user(data["id"]) # Devuelve los pedidos del usuario autenticado
 
+@Pedidos_bp.get("/productosMasVendidos")
+def productos_mas_vendidos():
+    pedidos_model = PedidosModel(current_app)
+
+    try:
+        limite = int(request.args.get("limite", 8))
+    except Exception:
+        limite = 8
+
+    productos = pedidos_model.productos_mas_vendidos(limite)
+
+    return jsonify(productos), 200
 
 @Pedidos_bp.get("/viewPedido/<id>")
 @token_required
@@ -56,7 +68,6 @@ def view_pedido(data, id):
     pedido_serializado = pedidos_model._serialize_pedido(pedido_raw)
     # print("\n------------\nPedido serializado para respuesta, desde el controlador:", pedido_serializado)
     return Response(json_util.dumps(pedido_serializado), mimetype="application/json")
-
 
 @Pedidos_bp.delete("/deletePedido/<id>")
 def delete_pedido(id):
@@ -113,3 +124,15 @@ def update_state(token_data, id):
         return jsonify({"mensaje": "Estado actualizado correctamente"}), 200
     except ValueError as e:
         return jsonify({"error": str(e)}), 400
+
+
+    pedidos_model = PedidosModel(current_app)
+
+    try:
+        limite = int(request.args.get("limite", 8))
+    except Exception:
+        limite = 8
+
+    productos = pedidos_model.productos_mas_vendidos(limite)
+
+    return jsonify(productos), 200

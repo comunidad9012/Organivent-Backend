@@ -150,73 +150,79 @@ function Productos() {
         <h1 className="productos-title">Productos</h1>
         
         {/* Filtros */}
-        <ProductosFiltros
-          orden={orden}
-          setOrden={setOrden}
-          precioMin={precioMin}
-          setPrecioMin={setPrecioMin}
-          precioMax={precioMax}
-          setPrecioMax={setPrecioMax}
-          soloDescuento={soloDescuento}
-          setSoloDescuento={setSoloDescuento}
-          colorSeleccionado={colorSeleccionado}
-          setColorSeleccionado={setColorSeleccionado}
-          coloresDisponibles={coloresDisponibles}
-          soloMasVendidos={soloMasVendidos}
-          setSoloMasVendidos={setSoloMasVendidos}
-          limpiarFiltros={limpiarFiltros}
-          setCurrentPage={setCurrentPage}
-        />
+        <div className="grid grid-cols-1 lg:grid-cols-[240px_1fr] gap-8 items-start">
+          <aside className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
+            <ProductosFiltros
+              orden={orden}
+              setOrden={setOrden}
+              precioMin={precioMin}
+              setPrecioMin={setPrecioMin}
+              precioMax={precioMax}
+              setPrecioMax={setPrecioMax}
+              soloDescuento={soloDescuento}
+              setSoloDescuento={setSoloDescuento}
+              colorSeleccionado={colorSeleccionado}
+              setColorSeleccionado={setColorSeleccionado}
+              coloresDisponibles={coloresDisponibles}
+              soloMasVendidos={soloMasVendidos}
+              setSoloMasVendidos={setSoloMasVendidos}
+              limpiarFiltros={limpiarFiltros}
+              setCurrentPage={setCurrentPage}
+            />
+          </aside>
 
-        <div className="productos-grid-wrapper">
-          {productos.length > 0 ? (
-            currentProducts.length > 0 ? (
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {currentProducts.map((product) => (
-                  <ProductoCard
-                    key={product._id}
-                    product={product}
-                    setProductos={setProductos}
+          <div>
+            <div className="productos-grid-wrapper">
+              {productos.length > 0 ? (
+                currentProducts.length > 0 ? (
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    {currentProducts.map((product) => (
+                      <ProductoCard
+                        key={product._id}
+                        product={product}
+                        setProductos={setProductos}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-12">
+                    <ShoppingCart
+                      size={96}
+                      className="mx-auto text-gray-400 mb-4"
+                    />
+                    <h3 className="text-lg font-medium text-gray-900 mb-2">
+                      No encontramos productos con esos filtros
+                    </h3>
+                    <p className="text-gray-600">
+                      Probá limpiar los filtros o ajustar los valores.
+                    </p>
+                  </div>
+                )
+              ) : (
+                <div className="text-center py-12">
+                  <ShoppingCart
+                    size={96}
+                    className="mx-auto text-gray-400 mb-4"
                   />
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-12">
-                <ShoppingCart
-                  size={96}
-                  className="mx-auto text-gray-400 mb-4"
-                />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">
-                  No encontramos productos con esos filtros
-                </h3>
-                <p className="text-gray-600">
-                  Probá limpiar los filtros o ajustar los valores.
-                </p>
-              </div>
-            )
-          ) : (
-            <div className="text-center py-12">
-              <ShoppingCart
-                size={96}
-                className="mx-auto text-gray-400 mb-4"
-              />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">
-                No hay productos disponibles
-              </h3>
-              <p className="text-gray-600">
-                Intenta ajustar tus filtros o vuelve más tarde.
-              </p>
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">
+                    No hay productos disponibles
+                  </h3>
+                  <p className="text-gray-600">
+                    Intenta ajustar tus filtros o vuelve más tarde.
+                  </p>
+                </div>
+              )}
             </div>
-          )}
+
+            <Paginacion
+              totalItems={productosOrdenados.length}
+              itemsPerPage={itemsPerPage}
+              currentPage={currentPage}
+              setCurrentPage={setCurrentPage}
+            />
+          </div>
         </div>
 
-        {/* Paginación */}
-        <Paginacion
-          totalItems={productosOrdenados.length}
-          itemsPerPage={itemsPerPage}
-          currentPage={currentPage}
-          setCurrentPage={setCurrentPage}
-        />
       </div>
     </section>
   );

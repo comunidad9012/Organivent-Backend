@@ -41,9 +41,9 @@ def productos_mas_vendidos():
     pedidos_model = PedidosModel(current_app)
 
     try:
-        limite = int(request.args.get("limite", 8))
+        limite = int(request.args.get("limite", 5))
     except Exception:
-        limite = 8
+        limite = 5
 
     productos = pedidos_model.productos_mas_vendidos(limite)
 

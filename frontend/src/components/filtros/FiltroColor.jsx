@@ -6,7 +6,7 @@ function FiltroColor({ colorSeleccionado, setColorSeleccionado, coloresDisponibl
           setColorSeleccionado(e.target.value);
           setCurrentPage(1);
         }}
-        className="border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-amber-400"
+        className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-amber-400"
       >
         <option value="">Todos los colores</option>
   

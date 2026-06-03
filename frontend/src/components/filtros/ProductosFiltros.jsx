@@ -21,52 +21,84 @@ function ProductosFiltros({
   limpiarFiltros,
   setCurrentPage,
 }) {
-  return (
-    <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
-      <div className="flex flex-wrap items-center gap-3">
-        <FiltroPrecio
-          precioMin={precioMin}
-          setPrecioMin={setPrecioMin}
-          precioMax={precioMax}
-          setPrecioMax={setPrecioMax}
-          setCurrentPage={setCurrentPage}
-        />
-
-        <FiltroDescuento
-          soloDescuento={soloDescuento}
-          setSoloDescuento={setSoloDescuento}
-          setCurrentPage={setCurrentPage}
-        />
-
-        <FiltroColor
-          colorSeleccionado={colorSeleccionado}
-          setColorSeleccionado={setColorSeleccionado}
-          coloresDisponibles={coloresDisponibles}
-          setCurrentPage={setCurrentPage}
-        />
-
-        <FiltroMasVendidos
-          soloMasVendidos={soloMasVendidos}
-          setSoloMasVendidos={setSoloMasVendidos}
-          setCurrentPage={setCurrentPage}
-        />
-
-        <button
-          type="button"
-          onClick={limpiarFiltros}
-          className="text-sm text-gray-400 hover:text-gray-700 transition"
-        >
-          Limpiar filtros
-        </button>
-      </div>
-
-      <OrdenarPor
-        orden={orden}
-        setOrden={setOrden}
-        setCurrentPage={setCurrentPage}
-      />
-    </div>
-  );
+    return (
+        <div className="flex flex-col gap-5">
+          <div>
+            <h3 className="text-lg font-bold text-gray-900">
+              Filtros
+            </h3>
+            <p className="text-xs text-gray-400">
+              Refiná tu búsqueda
+            </p>
+          </div>
+      
+          <div className="border-t border-gray-100 pt-4">
+            <p className="text-sm font-semibold text-gray-700 mb-2">
+              Ordenar por
+            </p>
+            <OrdenarPor
+              orden={orden}
+              setOrden={setOrden}
+              setCurrentPage={setCurrentPage}
+            />
+          </div>
+      
+          <div className="border-t border-gray-100 pt-4">
+            <p className="text-sm font-semibold text-gray-700 mb-2">
+              Precio
+            </p>
+            <FiltroPrecio
+              precioMin={precioMin}
+              setPrecioMin={setPrecioMin}
+              precioMax={precioMax}
+              setPrecioMax={setPrecioMax}
+              setCurrentPage={setCurrentPage}
+            />
+          </div>
+      
+          <div className="border-t border-gray-100 pt-4">
+            <p className="text-sm font-semibold text-gray-700 mb-2">
+              Ofertas
+            </p>
+            <FiltroDescuento
+              soloDescuento={soloDescuento}
+              setSoloDescuento={setSoloDescuento}
+              setCurrentPage={setCurrentPage}
+            />
+          </div>
+      
+          <div className="border-t border-gray-100 pt-4">
+            <p className="text-sm font-semibold text-gray-700 mb-2">
+              Color
+            </p>
+            <FiltroColor
+              colorSeleccionado={colorSeleccionado}
+              setColorSeleccionado={setColorSeleccionado}
+              coloresDisponibles={coloresDisponibles}
+              setCurrentPage={setCurrentPage}
+            />
+          </div>
+      
+          <div className="border-t border-gray-100 pt-4">
+            <p className="text-sm font-semibold text-gray-700 mb-2">
+              Popularidad
+            </p>
+            <FiltroMasVendidos
+              soloMasVendidos={soloMasVendidos}
+              setSoloMasVendidos={setSoloMasVendidos}
+              setCurrentPage={setCurrentPage}
+            />
+          </div>
+      
+          <button
+            type="button"
+            onClick={limpiarFiltros}
+            className="border-t border-gray-100 pt-4 text-sm text-gray-400 hover:text-gray-700 transition text-left"
+          >
+            Limpiar filtros
+          </button>
+        </div>
+    );
 }
 
 export default ProductosFiltros;
